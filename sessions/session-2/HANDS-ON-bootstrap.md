@@ -62,14 +62,16 @@ an instruction, a review, and a correction if needed.
 
 ### Suggested sequence
 
-1. **Plan first.** Cycle into plan mode (`Shift+Tab`) or just ask:
-   *"Before you write anything, give me a plan to bootstrap a new Python project
-   called `<name>` — one sentence on what it does, the directory structure, a
-   venv, pytest installed, a stub module with one function, a stub test, a
-   `.gitignore`, a README, and an initial git commit. List the files you'll
-   create and the order. Don't write anything until I say proceed."*
+1. **Plan first.** Cycle into plan mode (`Shift+Tab`) and ask for a plan — in
+   plan mode the agent reads and plans but writes nothing, so you don't need to
+   tell it not to:
+   *"Give me a plan to bootstrap a new Python project called `<name>` — one
+   sentence on what it does, the directory structure, a venv, pytest installed, a
+   stub module with one function, a stub test, a `.gitignore`, a README, and an
+   initial git commit. List the files you'll create and the order."*
    Read the plan. Does it match what you intended? Correct the scope, then say
-   `proceed`.
+   `proceed`. (Not in plan mode? Ask the same and add *"…and don't write anything
+   until I say proceed."*)
 2. Let it **create the structure, the venv, and install pytest.**
 3. Have it **write the stub module** with one function.
 4. Have it **write a stub test** that imports and calls that function.
