@@ -54,6 +54,33 @@ with no errors, you're done.
 
 ---
 
+## No project in mind? Pick one of these
+
+Didn't bring a real task, or want to keep today separate from your work? Grab one
+below — all **pure Python** (only `pytest` to install), each with one obvious
+function to stub and test. Just tell Claude Code the **name** and the
+**one-liner**; it plans the rest.
+
+1. **`fuel-units`** *(simplest)* — a volume converter. Function
+   `gallons_to_liters(gallons)`. *Done:* `gallons_to_liters(100)` ≈ `378.54`.
+   (Stretch: add `liters_to_gallons` and a round-trip test.)
+
+2. **`terminal-totals`** *(on-theme)* — total net gallons per terminal from a
+   list of records like `{"terminal": "DAL", "net_gal": 1250.5}`. Function
+   `totals_by_terminal(rows)` → `{terminal: total}`, skipping any row with a
+   blank `net_gal`. *Done:* three rows across DAL and OMA give the two right
+   totals.
+
+3. **`notes`** *(feels like a real tool)* — a tiny notes keeper saved to a JSON
+   file. `add_note(text, path)` appends a note; `list_notes(path)` returns them
+   in order. *Done:* add two notes, `list_notes` returns both. (Uses file I/O —
+   a little more to it.)
+
+Any of these satisfies the checklist. The point is the operating practice, not
+the project.
+
+---
+
 ## How to approach it
 
 The one constraint: **direct Claude Code to do the work.** Don't type the
