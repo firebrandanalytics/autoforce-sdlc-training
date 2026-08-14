@@ -101,6 +101,38 @@ something real, fix it in your original session (or this one) and re-run the
 tests. If it only found nitpicks — congratulations, that's what shipping feels
 like.
 
+### Make the reviewer reusable: `/agents` (~4 min)
+
+You just hand-rolled a reviewer: a fresh context, a rubric, a scope. You'll want
+it again on Monday, and on every PR after that — so don't retype it.
+
+```
+/agents
+```
+
+Create one called `volume-reviewer`. Two things make it worth keeping rather
+than re-pasting:
+
+- **Its instructions are the prompt you just used** — the five numbered steps,
+  including *"run the tests yourself, don't take the description's word."*
+- **It loads your `autoforce-volume-rules` skill**, so it reviews against *your*
+  decoded business rules — the dyed-diesel asymmetry, `net_gal`, the two
+  exclusions — not generic Python advice.
+
+It lands in `.claude/agents/` in your repo, which means it's **committed, shared,
+and reviewable like any other code.** Your teammate's PR gets reviewed against
+the same rules yours was.
+
+> **What you've actually built here is the interesting part.** A subagent is
+> exactly the fresh-context reviewer you just ran by hand — that's all it is. The
+> value isn't automation, it's that **the standard stopped living in your head
+> and became a file the team shares.** A rubric one person remembers is a
+> preference; a rubric in the repo is a standard.
+>
+> And the limit is the same one from Session 4's `/goal`: the reviewer is only
+> as good as the rubric you gave it. It will apply your rules faithfully,
+> including the wrong ones.
+
 **Log the review where the work lives, then merge:**
 
 ```
