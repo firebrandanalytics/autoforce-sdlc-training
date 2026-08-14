@@ -1,11 +1,37 @@
 # C11 — Advanced Claude Code: The Power Tools
 
-**Concepts and pointers, not exercises.** Everything in the course so far ran in
-one interactive session: you ask, you read, you approve. These five features are
-what's past that — and every one of them is the same discipline you already
+**Where the course stops, and what's past it.** Everything in the course ran in
+one interactive session: you ask, you read, you approve. These features are
+what's beyond that — and every one of them is the same discipline you already
 practice (gates, contracts, review), running with less of you in the room.
+
+**You've already used three of them.** `/subtask` fanned out the three magic-value
+decodes in Session 3; `/goal` drove the build to green in Session 4; `/agents`
+turned your clean-context reviewer into a reusable one in Session 5. So this card
+isn't a list of things to try someday — it's mostly the *next size up* of moves
+you've made.
+
 Surfaces evolve quickly: treat this card as the map, and check `/help` and
 **code.claude.com/docs** in *your* installed version before leaning on anything.
+(Checked against **2.1.232**.)
+
+---
+
+## Which one do I reach for?
+
+| I want to… | Reach for |
+|---|---|
+| Keep going until something is **true** | `/goal` |
+| Check back on a **timer**, still in this session | `/loop` |
+| Keep running **after I close the laptop** | `/schedule` or cron + headless |
+| Make the **same edit across many files**, fast | `/batch` |
+| Hand off **one scoped piece** and get a summary back | `/subtask` |
+| Keep a **reusable** specialist (a reviewer, a migrator) | `/agents` |
+| See what's **running right now** | `/tasks` |
+
+> Two distinctions people get wrong: **`/goal` runs on a condition, `/loop` runs
+> on a timer.** And **`/loop` dies when you close the session; a scheduled run
+> doesn't.**
 
 ---
 
@@ -68,20 +94,29 @@ output; *then* put it on a clock. Docs: *Routines*, *Headless mode*,
 
 **What it is.**
 
-- **`/loop 10m <prompt>`** re-runs a prompt on an interval inside your session
-  (or `/loop <prompt>` and it picks its own pacing). Needs a recent version
-  (v2.1.72+); recurring loops expire after 7 days.
 - **`/goal <condition>`** keeps the session working **until a condition is
-  met** — *"keep going until all tests pass"* is the canonical one.
+  met**. Sets the finish line, not the steps.
+- **`/loop [interval] <prompt>`** re-runs a prompt on an interval inside your
+  session (or `/loop <prompt>` and it picks its own pacing). Good for polling a
+  deploy or babysitting CI while you work on something else.
 
-**Why you'd bother.** You already lived the manual version in Session 4: the
-agent iterated to green while you watched. `/goal` is that loop made explicit —
-and it's exactly as trustworthy as its gate. A goal of *"until tests pass"*
-against tests you never read is automation of a mistake.
+**You did this.** Session 4, Step 4: `/goal keep working until python -m pytest
+is green` drove the build from red to green without you nudging it. Remember the
+order you did it in, because it's the whole discipline — **you read the tests and
+cross-checked the anchor numbers against the legacy script's printed output
+BEFORE you set the goal.**
 
-**First step.** On a branch with a failing test: `/goal keep working until
-pytest is green`, then review the diff like always. Docs: *Scheduled tasks* and
-*Goal*.
+> A goal of *"until tests pass"* against tests you never read is the automation of
+> a mistake. It will get there. It will be wrong. And it will be wrong faster and
+> more confidently than if you'd done it by hand.
+
+**The step up.** Chain them: a goal whose condition is a *validation gate* rather
+than a test run — *"keep working until pytest passes AND the CLI output reconciles
+to vol_report.py"*. That's your Session 4 done-gate, automated, and it's only
+sound because you built the gate first.
+
+**Next step.** Try `/loop` on something you currently babysit: *"`/loop 5m` check
+whether the deploy finished and report status."* Docs: *Scheduled tasks*, *Goal*.
 
 ---
 
@@ -89,26 +124,42 @@ pytest is green`, then review the diff like always. Docs: *Scheduled tasks* and
 
 **What it is.**
 
-- **Subagents** (stable): scoped workers your session spawns — each with its own
-  clean context, returning a summary. You met the pattern twice: Session 4's
-  option to split work, and Step 9's **clean-context reviewer**, which is a
-  subagent done by hand. Define reusable ones with **`/agents`** (they live in
-  `.claude/agents/` — give your reviewer the C10 rubric and your skill).
+- **`/subtask <prompt>`** — hand one scoped piece to a subagent with its own
+  clean context; it reports a summary back into your conversation.
+- **`/agents`** — define **reusable** subagents. They live in `.claude/agents/`,
+  which means they're committed, shared, and reviewable like any other code.
+- **`/batch <instruction>`** — one prompt, many files, in parallel. *"Rename this
+  symbol across 40 files." "Migrate every import path."* The tool for breadth,
+  where the work is repetitive and the same rule applies everywhere.
 - **Agent view** (`claude agents`) — dispatch and monitor several independent
   background sessions from one screen. *Research preview.*
-- **Dynamic workflows** — script the orchestration itself: fan work out to many
-  subagents, cross-check results, run in the background (v2.1.154+; try the
-  built-in `/deep-research`). *Research preview.*
+- **Dynamic workflows** — script the orchestration itself: distinct phases (find,
+  fix, verify), tens of agents, rerunnable later. Try the built-in
+  `/deep-research` for the pre-built research version. *Research preview.*
 
-**Why you'd bother.** EXTRA-CREDIT.md has you split a dashboard across two
-subagents against a contract, by hand. These features are that same move at
-scale — ten files to migrate, every query in a repo to audit — where the
-contract and the verification step decide whether scale helps or just produces
-wrong answers faster.
+**You did this, twice.** Session 3, Step 2a: three magic-value profiles fanned out
+with `/subtask` — and the thing that made it work was that you could state each
+scope in two sentences and the pieces couldn't contaminate each other. Session 5,
+Step 9: your clean-context reviewer became a saved `volume-reviewer` that loads
+your `autoforce-volume-rules` skill.
 
-**First step.** `/agents` → create a `code-reviewer` that loads your
-`autoforce-volume-rules` skill, and point it at your own PR. Docs: *Subagents*,
-*Agent view*, *Workflows*.
+Carry the split you practised: **you delegated the gathering and kept the
+judgment.** A subagent that hands you a confident conclusion has done the part
+you were supposed to do.
+
+**The step up — and the honest caveat.** `/batch` is the one you haven't used,
+because this course built *one* service and batch is for breadth. It earns its
+keep on the fifty-file jobs: a rename across a legacy codebase, a migration, an
+audit of every query in a repo. **The failure mode scales with it** — fifty files
+changed by a rule that was subtly wrong is worse than five, and no single diff
+review will catch it. The contract and the verification step are what decide
+whether scale helps or just produces wrong answers faster. Batch the mechanical;
+verify the result the way you verified your service.
+
+**Next step.** Point `/batch` at something genuinely repetitive and low-stakes
+first — adding a missing docstring to every module, normalising a log format —
+and diff the whole result before you commit. Docs: *Subagents*, *Agent view*,
+*Workflows*.
 
 ---
 
