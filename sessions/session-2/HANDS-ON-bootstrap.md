@@ -108,6 +108,11 @@ an instruction, a review, and a correction if needed.
 8. Run `python -m pytest tests/ -v`. If it fails, tell the agent exactly what
    failed and have it fix it — don't fix it by hand.
 
+> **Checkpoints.** This is ~25 minutes of work. Rough pace: structure and venv by
+> minute 8, stub module and test by 15, `.gitignore` and README by 20, committed
+> and green by 25. If you're well behind one of these, say so — being stuck
+> quietly is the only way to waste this block.
+
 ### Practice the levers from this session while you work
 
 This rep is where today's controls become muscle memory. Deliberately use each:
@@ -115,7 +120,9 @@ This rep is where today's controls become muscle memory. Deliberately use each:
 - **Approval modes.** Start in **Manual** — approve each action so you see what
   the agent is doing. Once you trust the direction (usually after a couple of
   steps), `Shift+Tab` to **Auto Mode** and let the routine file edits flow. Notice
-  it still pauses before shell commands.
+  it still pauses before shell commands. If Auto Mode takes something somewhere
+  you didn't want, that's what `/rewind` is for — you drilled it earlier; use it
+  here for real rather than untangling the mess by hand.
 - **`Ctrl+E` at a prompt.** On at least one approval prompt — the venv creation or
   the `git init` is a good one — press `Ctrl+E` to see the exact command before you
   approve it. Build this habit now; you'll use it on every risky prompt for the
