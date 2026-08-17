@@ -29,9 +29,11 @@ dashboard** on that service.
   `autoforce.sqlite` (a fuel-movements database), a deliberately partial
   `DATA-DICTIONARY.md`, and `vol_report.py` — a crusty legacy reporting script
   (with comments that lie) you comprehend, then replace.
-- **`homework/`** — the three between-session homework briefs (HW1 after Session 2,
-  HW2 after Session 3, HW3 after Session 4). Each is small and feeds the next
-  session.
+- **`homework/`** — the between-session briefs. **Start with
+  `homework-0-brief.md`: the warm-up to do *before* Session 2** — it proves your
+  setup works and points the agent at a repo you actually work in. Then HW1 after
+  Session 2, HW2 after Session 3, HW3 after Session 4. Each is small and feeds
+  the next session.
 - **`handouts/`** — reference cards (see `handouts/README.md`): the **C\*** cards
   (agentic practices — approval modes, model selection, spec template, review
   rubric, Claude Code commands) and the **D\*** cards (the dataset and the build —
@@ -52,8 +54,10 @@ committed at `sessions/session-5/starter/` so you're never blocked.
 
 ## Using this repo
 
-Clone it before Session 2. During each session, work inside that session's folder,
-directing Claude Code. The homework briefs tell you what to do between sessions.
+Clone it before Session 2 and do `homework/homework-0-brief.md` — the warm-up
+that gets your setup verified before the first hands-on session. During each
+session, work inside that session's folder, directing Claude Code. The homework
+briefs tell you what to do between sessions.
 Worked instructor solutions are kept separately and are not in this repo.
 
 > Sessions 3–5 run on the dataset in `data/`. You don't need to study it in

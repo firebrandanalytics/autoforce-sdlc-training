@@ -1,8 +1,16 @@
 # C6 — Model Selection Cheat Sheet
 
-Autoforce Developer AI Training · Session 2 (Hour 3) reference
+Autoforce Developer AI Training · Session 2 reference
 
 No prices — they change. Use relative cost and behavior to make the call.
+
+> **Names change too; the tiers don't.** Model *names* move every few months
+> (the current generation is Opus, Sonnet and Haiku at their own version
+> numbers). Everything on this card is about the **tier**, which is stable.
+> To see what you're actually on and what's available: `/status`, then
+> `/model` to switch. Don't memorise a version string — memorise the three
+> shapes below.
+
 ---
 
 ## The Three Tiers
@@ -36,7 +44,7 @@ No prices — they change. Use relative cost and behavior to make the call.
 - Navigating a codebase to understand an architecture
 - Reviewing AI-generated code for logic errors
 - Refactoring with a defined scope (e.g., "extract a service layer from routes")
-- Most of the work in Hours 7–9
+- Most of the build work in Sessions 4 and 5
 
 **Rule of thumb:** If you're not sure, start with Sonnet. It handles the overwhelming majority of professional engineering tasks without stepping up to Opus cost.
 

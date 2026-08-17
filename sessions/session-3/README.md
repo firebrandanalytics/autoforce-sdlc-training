@@ -59,8 +59,10 @@ do, not what it does now.)
 
 1. **Share-back from Homework #1** (~10 min) — the log needle-hunt you finished,
    and a new command-line technique you learned from the agent.
-2. **Meet the dataset** (~18 min) — a guided walk through the schema of the
-   fuel-movements database (terminals, lifts, RIN credits) and how to open it.
+2. **Meet the dataset** (~10 min led + ~8 min hands-on) — a guided walk through
+   the schema of the fuel-movements database (terminals, lifts, RIN credits),
+   then **you** point your agent at the actual rows and name the two oddest
+   things you find. You aren't expected to explain them — just to notice them.
 3. **First pass, no agent** (~12 min) — read the opaque query yourself, then we
    compare what made it hard. (You appreciate the agent more for trying first.)
 4. **What the query does** (~12 min) — bring in the agent for the literal read:
@@ -73,7 +75,8 @@ do, not what it does now.)
 7. **Don't trust the comments** (~10 min) — catch lying comments in a small
    script by checking each claim against the data.
 8. **Working safely with real data** (~8 min) — scoping access; keeping
-   connection strings and PII out of the agent; a quick secret-the-agent-never-sees demo.
+   connection strings and PII out of the agent; and a short hands-on where you
+   have the agent create and use a secret it never actually sees.
 9. **Wrap and Homework #2** (~10 min) — build an "intent dossier" for a legacy
    script: what it truly computes, and which comments are lying.
 
@@ -111,7 +114,8 @@ No need to study the data beforehand. Coming to it cold is part of the exercise.
 |---|---|
 | `README.md` | This file — the session overview. |
 | `LAB-GUIDE.md` | The Exercise 1 walkthrough. Open it when we reach the lab. |
-| `retail_gas_report.py` | A tiny helper with lying comments — you'll catch them in the lab's last step. |
+| `retail_gas_report.py` | A tiny helper with lying comments — you'll catch them in the lab's comment hunt. |
+| `secrets-drill/` | Two small scripts for the safety drill: the agent creates a real secret and uses it, without ever seeing its value. |
 
 The dataset itself lives in [`../../data/`](../../data/): the database
 (`autoforce.sqlite`) and a deliberately partial data dictionary. The legacy script

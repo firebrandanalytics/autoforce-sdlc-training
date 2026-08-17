@@ -66,6 +66,42 @@ them.)
 
 ---
 
+## Warm-up — profile the dataset yourself (8 min)
+
+Before the mystery query, get your own hands on the data. Your instructor has
+walked the schema file; now go look at the actual rows. **Don't read
+`DATA-DICTIONARY.md` any further than you already have** — the point is to see
+what the database says about itself.
+
+**Direct your agent** (don't type SQL yourself — this is the habit for the whole
+session):
+
+> Against `data/autoforce.sqlite`: list the tables, then show me `.schema lifts`,
+> a `COUNT(*)`, and five real rows. Then, for every column in `lifts` that holds a
+> bare integer code, show me the distinct values and how often each occurs.
+> Don't read `DATA-DICTIONARY.md` — I want what the database itself says.
+
+Then answer these, in the chat or out loud:
+
+1. **What's the shape?** Which table is the fat one, and what do the others do?
+2. **Name the two oddest things you see.** Something that doesn't look like a
+   tidy schema — a column whose name tells you nothing, a code you can't explain,
+   a value that appears far more or less than you'd expect.
+3. **Look at `code_ref`.** Does it explain every code you just found in `lifts`?
+
+### Done when
+
+You've named two things that look strange to you. **You are not expected to
+explain them** — you're expected to *notice* them. That noticing is the whole
+skill; the rest of the session is method for chasing it down.
+
+> **Why we do this before the query.** In a few minutes you'll meet a query built
+> out of exactly these oddities. If you've already seen them in the rows, the
+> query reads as a puzzle you have a foothold on. If you haven't, it reads as
+> noise. Eight minutes now buys the next fifty.
+
+---
+
 ## Step 0 — Your own first pass (no agent, ~5 min)
 
 Before you let the agent near it, read the query yourself. **Agent closed.** You
@@ -188,6 +224,40 @@ SELECT prod_cd, ROUND(AVG(rack_price),2) FROM rack_prices GROUP BY prod_cd ORDER
 **Checkpoint 2a:** For each code you can state (a) what the data shows
 structurally and (b) one honest sentence on what the data *can't* settle. You have
 hypotheses, not yet conclusions.
+
+### Optional: fan the three profiles out in parallel (`/subtask`)
+
+Three codes, three profiling jobs, and **none of them depends on the other two** —
+which is the textbook case for delegating. In Session 2 you met subagents as a
+concept; this is the first place in the course where they're actually the right
+tool. Instead of profiling the codes one after another:
+
+```
+/subtask Profile status=8 in data/autoforce.sqlite using ONLY the fact tables
+(lifts, rin_transactions, rack_prices). Do not read DATA-DICTIONARY.md, do not
+query code_ref, do not read any .py file. Report: distribution, how it differs
+from other status values, and explicitly what you CANNOT determine about its
+meaning from the rows alone.
+```
+
+Fire the same shape for `mode = 8` and `prod_cd = 6`. Each subagent gets its own
+clean context, does its profiling, and reports back a summary into your session.
+
+**The two things to notice — they matter more than the speed-up:**
+
+1. **What made this delegable** was that you could state the scope in two
+   sentences and the pieces couldn't contaminate each other. When you *can't*
+   write that scope, delegating costs more than it saves — the subagent comes
+   back asking questions, and you pay for the round trip.
+2. **You delegated the gathering, not the judgment.** The next step — deciding
+   what the evidence actually supports, and where it runs out — is yours, in your
+   session, with all three reports in front of you. That split is the whole
+   lesson. **A subagent that hands you a confident conclusion has done the part
+   you were supposed to do**, and you should be suspicious of it.
+
+> **Prefer the sequential path?** Take it. The decode is what's being assessed
+> here, not the plumbing — and doing it by hand makes the contrast obvious when
+> you *do* reach for subagents in Session 5.
 
 ### Step 2b — Now bring in the schema, and read it critically (10 min)
 
@@ -386,6 +456,23 @@ isn't there** (lie 3). Catch both.
 **Checkpoint 4:** You've caught all three comment/behaviour gaps, each with a
 query that proves it. (This is the warm-up. Homework #2 runs the full version on a
 real legacy script — `vol_report.py` — that ships with the homework brief.)
+
+---
+
+## Step 5 — The secret the agent never sees (5 min)
+
+Today's data lives in a read-only file on your laptop — the safest sandbox there
+is. On your real systems it won't, and the agent will need credentials it must
+never *see*. Five minutes to prove that seam works.
+
+**Go to [`secrets-drill/`](secrets-drill/README.md) and run it.** Two scripts:
+one generates a real secret into a file, one uses it to sign a value. Neither
+ever prints the secret, so it never enters the agent's context — and you'll
+confirm that by asking the agent what the secret is and watching it not know.
+
+**Checkpoint 5:** You can point at the seam — the agent used a credential it
+never saw. That's the pattern for every DSN, token, and password you'll hand an
+agent from here on.
 
 ---
 

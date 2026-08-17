@@ -24,8 +24,8 @@ These seven are the ones the course actively uses. They are tool/practice refere
 | **C7 — AI-Ready Spec (Prompt) Template** | Turning any task into a structured spec the agent can execute | Sessions 2, 4 (general task spec) |
 | **C9 — Microsoft Graph CLI Quick Reference** | Reaching email / Teams / SharePoint from Claude Code | Session 2 |
 | **C10 — "What Good Looks Like" Review Rubric** | Reviewing AI-generated code before approving — correctness, hallucinated APIs, tests, security, scope | Sessions 4, 5 |
-| **C11 — Advanced Claude Code** | The power tools past the interactive session — custom status line, scheduled runs, `/loop` & `/goal`, subagents & orchestration. Concepts + first steps, no exercises | Session 5 (extra credit), after the course |
-| **CC — Claude Code Commands Card** | The ~20 highest-frequency commands, shortcuts, and approval keys | Every session |
+| **C11 — Advanced Claude Code** | The power tools past the interactive session — custom status line, scheduled runs, `/loop`, `/batch`, subagents & orchestration. Includes a "which one do I reach for?" table. Three of its features (`/subtask`, `/goal`, `/agents`) are now used *inside* Sessions 3–5, so it reads as the next size up rather than a someday list | Session 5, after the course |
+| **CC — Claude Code Commands Card** | The highest-frequency commands, shortcuts, and approval keys. Commands marked ▶ get a hands-on drill somewhere in the course; the rest are for when you need them | Every session |
 
 ---
 
@@ -75,4 +75,5 @@ These shipped with the original course and remain in the folder for reference. T
 
 - **Format:** each card opens with a one-line "what this is / when to use it," and most close with a one-line summary you can scan in seconds.
 - **Paths:** the dataset is at `../data/autoforce.sqlite`; the legacy script students analyze is `../data/vol_report.py`. Every SQL example in the D\* cards runs against that database as-shipped.
+- **Version-sensitive content.** CC and C11 name specific slash commands and were checked against Claude Code **2.1.232** (August 2026). Run `/help` in your own install if something doesn't appear; the underlying practices don't change when a command name does.
 - **Do not edit the C\* cards.** They are shared source. The D\* cards are the course-specific additions; suggest changes to the C\* set through the instructor.

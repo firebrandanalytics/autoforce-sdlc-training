@@ -111,6 +111,8 @@ session, and you'll check the agent's tests against it.
 
 ## Step 1 — The spec, drafted from your dossier (~4 min)
 
+> ⏱ **Checkpoint: done by ~minute 20.** Behind? Four lines and five bullets, then move — your dossier already made these decisions.
+
 ### The ask
 
 > "Hey — can you get me clean monthly volumes by terminal? The old
@@ -153,6 +155,8 @@ move. (Dossiers vary; the data doesn't.) Don't polish. Move.
 ---
 
 ## Step 2 — Capture what you know as a *skill* (~6 min)
+
+> ⏱ **Checkpoint: spec + skill both done by ~minute 25.**
 
 Your HW2 dossier lives in a doc only *you* will read. Turn it into a **skill** —
 a file the agent itself loads — and every future session (yours, and the parallel
@@ -197,6 +201,8 @@ body-only facts a generic answer can't fake.
 ---
 
 ## Step 3 — Stories on the board · foundation on main · your branch (~10 min)
+
+> ⏱ **Checkpoint: board + foundation commit + branch by ~minute 35.** If `az` is fighting you, give it **two minutes**, then take the fallback (stories.md + a local `git init`) and keep moving. Nobody spends this block on auth.
 
 A spec says what *right* means; **stories** slice it into shippable, checkable
 work — and today they go on the **real Azure DevOps board**, because that's
@@ -271,6 +277,8 @@ Lay the project foundation on main, then cut the story branch:
 
 ## Step 4 — Plan it, read the plan, approve — and let it run (~15 min, green included)
 
+> ⏱ **Checkpoint: plan approved and flowing by ~minute 45 · green by ~55.** This is the block's anchor — if you're behind, say so rather than falling quietly behind.
+
 Switch into planning mode (`claude --permission-mode plan`, or `Shift+Tab`).
 Plan mode means the agent **can read everything and touch nothing** — so think it
 through with it, freely:
@@ -331,6 +339,38 @@ the plan.
 > then implement service.py, run pytest, and iterate until green. Ask me only
 > for permissions, or if the evidence contradicts the spec."*
 
+### Set the finish line instead: `/goal` (2 min)
+
+You just pasted a nudge because the agent stopped and asked what to do next.
+There's a cleaner way to say the same thing once, up front:
+
+```
+/goal keep working until python -m pytest is green
+```
+
+`/goal` sets a **condition**, not a next step — the session keeps working across
+turns until the condition is true, instead of checking in each time it finishes a
+piece. It's the difference between "do this, then ask me" and "here's what done
+looks like, tell me when you're there."
+
+**And here is the entire point of using it in this exact spot.** You are about to
+let an agent run unsupervised toward a finish line — which is *only* as
+trustworthy as the finish line itself:
+
+> A goal of *"until tests pass"*, against tests you never read, is the automation
+> of a mistake. It will get there. It will be wrong. And it will be wrong faster
+> and more confidently than if you'd done it by hand.
+
+That's why the plan put **tests first** and why you cross-checked the anchor
+numbers against the legacy script's printed output. **You read the gate before
+you automated toward it.** Every unattended-agent feature in Claude Code — goals,
+loops, scheduled runs — rests on that one habit, and you just practised it in the
+only order that works.
+
+> **Don't want to use it?** Fine — the paste-the-nudge path works identically and
+> you'll finish at the same place. Try `/goal` on the next red-to-green cycle
+> instead; Step 6's change request is a good one.
+
 **When it lands on green: read the tests** (5 quiet minutes). They are your spec,
 executable — the contract fields, the invariants, the anchors. If a test asserts
 something your spec didn't say, one of them is wrong. Fix that now.
@@ -338,6 +378,8 @@ something your spec didn't say, one of them is wrong. Fix that now.
 ---
 
 ## Step 5 — Validate: the tests, the log, and the database (~10 min)
+
+> ⏱ **Checkpoint: validated by ~minute 75.** This is the done-gate — the slice that matters most today.
 
 Green tests are necessary, not sufficient. Make the agent prove the run against
 the **real artifacts**:
@@ -372,6 +414,8 @@ compare to what the legacy script *prints*).
 ---
 
 ## Step 6 — A change request lands (~10 min)
+
+> ⏱ **Checkpoint: change landed and log-diff clean by ~minute 85.**
 
 It always does. The desk replies:
 
@@ -424,9 +468,38 @@ Two things to notice while it works:
 **Checkpoint:** tests green again, the before/after log diff shows existing
 numbers byte-identical, and the ticket carries the comment trail.
 
+### If the change goes sideways: `/rewind` (2 min)
+
+A contract change is exactly the kind of edit that can quietly go further than
+you meant — the agent "helpfully" renames a field, reshapes two other tests, or
+edits the contract assertion without flagging it as a contract decision.
+
+**If that happens, don't untangle it by hand.**
+
+```
+/rewind
+```
+
+Roll back to before the change request, then re-issue it with the constraint that
+was missing — *"only add a field; do not rename or restructure anything that
+exists."* You practised this in Session 2 on a throwaway file; this is what it
+was for.
+
+> **The judgement worth naming:** rewinding and re-prompting is usually *cheaper*
+> than repairing, because a repair leaves the agent's context full of the wrong
+> version — you end up arguing with a session that still believes in the change it
+> made. Rewind takes the conversation back too. The rule of thumb: **if the fix
+> needs more than two corrections, rewind and re-ask.**
+>
+> And note the edge, because it matters here more than in Session 2: once you've
+> committed and pushed in Step 8, `/rewind` is no longer the tool. That's what
+> the branch and the PR are for.
+
 ---
 
 ## Step 7 — Documentation, while it's true (~10 min)
+
+> ⏱ **Checkpoint: docs read by ~minute 95.** Behind? A three-minute skim is enough — protect the ship.
 
 Docs written months later describe what someone *remembers*. Yours get written
 now, by the agent, from the actual artifacts — and your job is to **read them**.
@@ -459,6 +532,8 @@ python3 -m pydoc -w service        # writes service.html — open it in a browse
 
 ## Step 8 — Ship it: commit + PR (~10 min)
 
+> ⏱ **Checkpoint: shipped by ~minute 105.**
+
 Your repo and branch have existed since Step 3 — now the work lands on them, as
 a reviewable unit:
 
@@ -490,6 +565,25 @@ agent reviewing it, then the merge, then the ticket close.
 
 > **Fallback (no DevOps):** the local branch + approved commit + PR.md is the
 > complete deliverable; the push and PR happen at the top of Session 5.
+
+### One last reading: what did that cost? (1 min)
+
+```
+/usage
+```
+
+You just built a tested, reconciled, documented, committed service. Look at the
+number.
+
+In Session 2 you were told cost is downstream of habits — planning before a
+multi-file change, compacting a bloated session, matching the model to the job.
+This is that claim with a real figure attached, on real work, and it's worth
+thirty seconds of your attention because it's the number your manager will ask
+about. Compare it to what the same deliverable costs in engineer-hours.
+
+*(A caveat worth carrying: this is a session gauge, not an invoice. Use it for
+relative judgement — "that exploratory detour cost more than the build" — not for
+accounting.)*
 
 ---
 

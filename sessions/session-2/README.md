@@ -1,6 +1,6 @@
 # Session 2 — Operating the Agent + Claude Code as Your Shell
 
-**Date:** 6/4 · **Format:** 2 hours, online (Teams) · **Hands-on:** yes
+**Date:** 8/18 · **Format:** 2 hours, online (Teams) · **Hands-on:** yes
 
 Session 1 was about the mindset. This session is about the controls. You'll
 learn the handful of levers you actually turn day to day when you operate an
@@ -28,6 +28,10 @@ before we start. If it isn't working, flag it at the top — we'll verify live.
   SharePoint) from the same place.
 - **Live walk-through:** planning mode, the approval flow, and letting the agent
   run on low-risk steps.
+- **Three warm-up drills.** Short, hands-on, spread through the first hour — you
+  practise each control as we describe it rather than waiting for the build.
+  Reading your own session state; undoing an agent's work with `/rewind`; and
+  watching your context and your cost actually move.
 - **Hands-on rep:** each of you bootstraps a small project end to end by
   directing the agent.
 
@@ -40,9 +44,12 @@ from your own work.
 ## In this folder
 
 - `README.md` — this file. Read it before the session.
+- `HANDS-ON-warmups.md` — three short drills (5–7 min each) we run during the
+  first hour. Have this open from the start; we'll call each one as we reach it.
 - `HANDS-ON-bootstrap.md` — the in-session rep: bootstrap a small Python project
   end to end by directing Claude Code. We'll do this together, then you'll
   finish it on your own.
+- `log-hunt/` — the needle-in-8,000-lines exercise we run in the second hour.
 
 Keep these reference cards open from here on (they live in the course handouts):
 
@@ -67,7 +74,9 @@ Three modes, cycled with `Shift+Tab`. *Manual* stops and asks before every file
 write or command. *Auto Mode* lets edits through automatically and still asks
 before shell commands. *Plan mode* writes nothing — it only plans. You start in
 Manual on anything unfamiliar and step up to Auto Mode once you trust the
-direction. (Card: **C5**.)
+direction. What makes that step up reasonable is `/rewind`, which rolls the code
+*and* the conversation back to a checkpoint — we drill it. (Card: **C5**, and
+**CC** for `/rewind`.)
 
 **2. Planning mode — plan before you act.**
 Cycle into plan mode and the agent does exactly one thing: it reads the relevant
@@ -86,8 +95,10 @@ validation rules. Not worth it for small or sequential work.
 **4. Context — manage the agent's working memory.**
 Every session accumulates context: files read, edits made, output produced. Long
 sessions drift — the agent forgets a constraint or re-proposes something you
-rejected. `/compact` summarises the conversation and keeps going; `/clear` wipes
-it and starts fresh; a brand-new `claude` session is the cleanest reset. A
+rejected. `/context` shows you how full it is, so this is a control you can see
+rather than guess at. `/compact` summarises the conversation and keeps going;
+`/clear` wipes it and starts fresh; a brand-new `claude` session is the cleanest
+reset. A
 `CLAUDE.md` file at the project root gives the agent the project context it would
 otherwise guess. (We work with `CLAUDE.md` for real in later sessions.)
 
@@ -147,7 +158,17 @@ anything in this course.
 
 ## Pre-session prep
 
-**Come with one real task from your actual work in mind.** Not a toy problem. A
+**Do the warm-up: [`../../homework/homework-0-brief.md`](../../homework/homework-0-brief.md)** — 20–30 minutes,
+and the first ten of them are just proving your setup works. This session is
+hands-on from the start; a broken install found at 1:05pm costs you the whole
+session. Please check it before Monday.
+
+The warm-up also has you point the agent at a repo you actually work in and ask
+it about something you didn't write — bring one sentence on what it told you (or
+where it was confidently wrong and you caught it). We'll open with a couple of
+those.
+
+**And come with one real task from your actual work in mind.** Not a toy problem. A
 real one — something you'd normally do by hand in a terminal. We'll use it to set
 up your Homework #1, and you'll want a concrete task you care about rather than
 something invented on the spot.
@@ -168,10 +189,12 @@ introduce risk.
 
 ## Readiness checklist
 
+- [ ] **Warm-up done** ([`homework-0-brief.md`](../../homework/homework-0-brief.md)) — setup proved, agent pointed at your own repo
 - [ ] Laptop with you
-- [ ] Claude Code installed and launching — this session is hands-on, so flag it
-      now if it isn't working
+- [ ] Claude Code installed and launching, and `/context` appears in `/help`
+      (if not: `claude update`) — this session is hands-on, so flag it now if it isn't working
 - [ ] Access to the student repository confirmed
+- [ ] One sentence to share from the warm-up
 - [ ] One real task from your work in mind to direct the agent on
 
 ---
@@ -182,7 +205,7 @@ introduce risk.
 real task before Session 3. The brief is in
 `../../homework/homework-1-brief.md`.
 
-**Looking ahead:** Session 3 introduces the working dataset — a realistic U.S.
-Energy fuel-movements database — and turns the agent loose on reading SQL and a
-schema you didn't write. The planning-mode and subagent levers you meet today
+**Looking ahead:** Session 3 introduces the working dataset — a realistic
+Autoforce fuel-movements database — and turns the agent loose on reading SQL and
+a schema you didn't write. The planning-mode and subagent levers you meet today
 get used for real across Sessions 3–5.
