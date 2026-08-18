@@ -20,11 +20,14 @@ ahead.
 
 **When:** at the top of the session, right after the setup check.
 **The idea:** you should never have to guess which model you're on, how full the
-context is, or what mode you're in. Three commands answer all of it.
+context is, what mode you're in, or which repository state you're looking at.
+The built-in commands give you a snapshot; the status line turns the useful parts
+into a persistent dashboard.
 
 ### Do this
 
-1. In a terminal, in any directory, run `claude`.
+1. In a terminal, `cd` into the training repository (or another Git repository)
+   and run `claude`.
 2. At the `>` prompt, run each of these and *read the output*:
 
    ```
@@ -34,14 +37,38 @@ context is, or what mode you're in. Three commands answer all of it.
    /context
    ```
 
-3. Answer these three questions out loud (or in the chat):
+3. Now ask Claude Code to set up your persistent status line:
+
+   ```
+   /statusline show the active model, context used as a percentage (not remaining), current working directory, and active git branch
+   ```
+
+   Approve the file-edit prompts if Claude Code asks for permission. Claude Code
+   generates the status-line script and updates your settings automatically. If
+   it does not appear immediately, send one harmless next message; settings take
+   effect on the next interaction.
+
+4. Read the new status line at the bottom of the interface. It should show:
+   - the **active model**
+   - **context used** as a percentage (we prefer used over remaining for this course)
+   - the current working directory (**CWD**)
+   - the active **Git branch**
+
+5. Answer these three questions out loud (or in the chat):
    - **Which model** are you on right now?
    - **Which approval mode** are you in?
    - Roughly **how full** is your context — a sliver, or half the grid?
 
 ### Done when
 
-You can state your model, your mode, and your context usage without guessing.
+You can state your model, your mode, and your context usage without guessing, and
+you can point to the repository and branch you are working in. Your status line
+should keep updating as the session changes.
+
+> **Claude Code reference.** See [Customize your status line](https://code.claude.com/docs/en/statusline)
+> for the `/statusline` command, the available `model.display_name`,
+> `context_window.used_percentage`, `workspace.current_dir`, and Git data, plus
+> examples of what Claude Code generates for you.
 
 > **Why it matters.** Every lever we cover in the next hour — mode, model,
 > context — is one you can only pull deliberately if you can *see* where it's
