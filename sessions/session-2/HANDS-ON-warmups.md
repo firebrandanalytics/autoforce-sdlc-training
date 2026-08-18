@@ -80,7 +80,13 @@ should keep updating as the session changes.
 
 **When:** during the approval-modes beat.
 **The idea:** the reason you can afford to let the agent run is that you can take
-it back. `/rewind` rolls the **code and the conversation** back to a checkpoint.
+it back. `/rewind` lets you choose whether to roll back the **conversation**, the
+**code**, or both.
+
+> **Mode check first.** Claude Code now starts in **Auto mode** by default in the
+> current setup. For this exercise, press **`Shift+Tab`** until the mode indicator
+> says **Manual** (the underlying mode is called `default`). We want you to see
+> and approve each action while you practise the safety net.
 
 ### Do this
 
@@ -111,14 +117,25 @@ it back. `/rewind` rolls the **code and the conversation** back to a checkpoint.
    /rewind
    ```
 
-   Pick the checkpoint from before step 3. Then check what happened:
-   `! ls` and `! cat notes.md`.
+   Pick the checkpoint from before step 3. The menu gives you separate choices:
+
+   - **Restore conversation** — rewind the transcript, but keep the current files.
+   - **Restore code** — restore the files, but keep the rewritten conversation.
+   - **Restore code and conversation** — restore both.
+
+   For the main exercise, choose **Restore code and conversation**. Then check
+   what happened with `! ls` and `! cat notes.md`. The extra files disappear only
+   when you choose an option that restores the code. If you choose conversation
+   only, the conversation goes back but `notes.md` stays rewritten and the extra
+   files remain.
 
 ### Done when
 
-`notes.md` is back to your three bullets, the extra files are gone — **and** the
+`notes.md` is back to your three bullets, the extra files are gone, **and** the
 agent doesn't reference the rewritten version when you ask it what's in the file.
-That second part is the one people miss: the conversation rolled back too.
+That second part is the one people miss: the conversation rolled back too. If you
+chose conversation-only instead, the files should still be present; that's the
+point of noticing what each rewind choice actually restores.
 
 > **Why it matters.** Every approval you give is a bet on how hard the mistake
 > would be to undo. `/rewind` makes a whole class of mistakes cheap, which is
