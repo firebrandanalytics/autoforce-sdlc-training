@@ -146,34 +146,70 @@ point of noticing what each rewind choice actually restores.
 
 ---
 
-## Drill 3 — Watch your working memory and your bill move (6 min)
+## Drill 3 — Watch your context move, then compact it (6 min)
 
 **When:** during the context and model-selection beat.
-**The idea:** context and cost are measurable, not vibes. You're about to watch
-both of them move in response to something you did.
+**The idea:** context is measurable, not vibes. You're about to create a small
+piece of code, write tests that expose its bugs, fix it, and watch the context
+window grow after each step before compacting it back down.
 
 ### Do this
 
-1. Stay in the same session as Drill 2 (you want some history in it).
-2. Take a **baseline**:
+1. Stay in the same empty scratch directory from Drill 2, but start a fresh
+   conversation:
+
+   ```
+   /clear
+   ```
+
+   `/clear` removes the conversation from the active context but leaves the
+   directory and its files in place. Take a baseline:
 
    ```
    /context
    ```
+
+   Note roughly how much of the grid is filled.
+
+2. **Create a deliberately imperfect script.** Paste this prompt into Claude Code:
+
    ```
-   /usage
+   Create a Python file called buggy_report.py, about 100 lines long, for a small monthly sales report. Use only the Python standard library. Include a summarize(rows) function that accepts rows like {"month": "2026-01", "product": "coffee", "units": 3, "price": 2.50} and returns a list of dictionaries. The contract is: group by month and product; sum units; calculate total_sales as units * price rounded to two decimals; sort the output by month ascending and then product ascending; and reject negative units with ValueError. Include docstrings, comments, a small main() with sample data, and enough readable structure to make this a roughly 100-line script. Deliberately include exactly two small, plausible bugs in summarize() or its helpers that violate the contract and will be exposed by these tests; do not put the bugs only in main(). Do not reveal which lines are buggy, and do not write tests yet. Make sure the script is syntactically valid and runs.
    ```
 
-   Note roughly how much of the grid is filled, and what the session has cost so
-   far.
+   When it finishes, run:
 
-3. **Fill it up.** Give the agent something that reads a lot:
+   ```
+   /context
+   ```
 
-   > *"Read every file in this directory, then summarise what this project is
-   > and what you'd add next."*
+   The grid should be visibly fuller.
 
-4. Take the reading again — `/context`, then `/usage`. The grid should be
-   visibly fuller and the number visibly bigger.
+3. **Write tests that should fail.** Paste this prompt:
+
+   ```
+   Write standard-library unittest tests in test_buggy_report.py for the documented contract of summarize() in buggy_report.py. Cover combining rows for the same month and product, total_sales rounding, month/product sorting, and rejection of negative units. Do not change buggy_report.py and do not weaken the tests. Run python -m unittest -v and show me the failures; the tests should fail against the intentionally buggy implementation.
+   ```
+
+   Then run:
+
+   ```
+   /context
+   ```
+
+   Notice that the context has moved again. The failing tests are expected.
+
+4. **Fix the bugs and make the tests pass.** Paste this prompt:
+
+   ```
+   Now fix only the implementation in buggy_report.py so it satisfies its documented contract. Do not change test_buggy_report.py. Run python -m unittest -v, iterate if needed, and stop only when all tests pass. Summarize the two bugs you found and fixed.
+   ```
+
+   Check the context one more time:
+
+   ```
+   /context
+   ```
 
 5. **Compact it, then measure again:**
 
@@ -184,19 +220,27 @@ both of them move in response to something you did.
    /context
    ```
 
+   The context should be visibly smaller. If the first reading after `/compact`
+   has not refreshed yet, send a harmless message and run `/context` again.
+
 ### Done when
 
-You've seen the grid grow and then shrink, and you can say roughly what this
-session has cost you.
+You've seen the grid grow after the script, the failing tests, and the fix; then
+you've seen it shrink after `/compact`. The tests failed before the fix and passed
+after it.
 
 > **Why it matters.** This is the whole cost conversation in one drill. Nobody
-> tunes cost with a dial — it falls out of habits like this one: noticing a
+> tunes context with a dial — it falls out of habits like this one: noticing a
 > bloated session and compacting it, instead of fighting a confused agent for
 > twenty minutes and paying for every round-trip.
 >
 > Note what `/compact` did to the *conversation*, not just the number: it kept
 > the gist and dropped the verbatim. That's why it's the mid-task move and
 > `/clear` is the between-tasks move.
+
+> **Claude Code reference.** `/clear` starts a new conversation with empty
+> context, `/context` visualizes current context usage, and `/compact` summarizes
+> the conversation to free space. See the [commands reference](https://code.claude.com/docs/en/commands).
 
 ---
 
