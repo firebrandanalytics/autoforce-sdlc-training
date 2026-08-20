@@ -329,7 +329,13 @@ flagged unknown), `prod` a data-proven behavioral finding plus a to-confirm labe
 
 ---
 
-## Step 3 — Read the machine: the query plan (16 min)
+## Optional Step 3 — Read the machine: the query plan (up to 16 min)
+
+> **Optional extension:** finish Steps 0–2b first. If you are still decoding the
+> magic values when your instructor calls time, skip ahead to Step 4. Nothing in
+> the required comment or secret exercises depends on creating this index. If
+> you reach this step, use it to see how the database executes the query and how
+> a small rewrite changes the access path.
 
 The query "is slow at month-end." Let's see why — and fix it. Keep **D2** open.
 
@@ -428,7 +434,7 @@ prove the results are unchanged and discuss which filters are selective.
 > matters most when the table is large. On your real warehouse it's the
 > difference between seconds and minutes.
 
-**Checkpoint 3:** Your plan shows `SCAN` before and `SEARCH ... USING INDEX`
+**Optional checkpoint 3:** Your plan shows `SCAN` before and `SEARCH ... USING INDEX`
 after; you rewrote the non-sargable `substr(...)` filter to a range so the index
 could engage; and you confirmed the result set is unchanged.
 
@@ -547,7 +553,7 @@ By the end of Exercise 1 you have, for a query you'd never seen:
 | A data-only read | What the rows alone establish about `8`/`8`/`6` — and what they can't |
 | A schema cross-check | Where the lookup/dictionary confirm, drift, or stay silent |
 | Honest meanings | `status` (lookup, read critically), `mode` (unknown → human), `prod` (data-proven taxable-leaning finding + a label to confirm) |
-| A faster, equivalent query | Non-sargable filter rewritten; index added; plan flipped SCAN → SEARCH |
+| A faster, equivalent query *(optional)* | Non-sargable filter rewritten; index added; plan flipped SCAN → SEARCH |
 | Comment-rot findings | Three lying comments in a helper script, caught against behaviour |
 
 That's the comprehension move end to end: **read the data, cross-check the docs,
