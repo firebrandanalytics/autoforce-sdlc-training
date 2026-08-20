@@ -57,12 +57,15 @@ do, not what it does now.)
 
 ## Agenda (2 hours)
 
-1. **Share-back from Homework #1** (~10 min) — the log needle-hunt you finished,
-   and a new command-line technique you learned from the agent.
-2. **Meet the dataset** (~10 min led + ~8 min hands-on) — a guided walk through
+1. **Share-back from Homework #1** (~8 min) — the project exercise that became
+   homework: what you directed the agent to build, what needed your review, and
+   one new command-line technique you learned along the way.
+2. **Meet the dataset** (~8 min led + ~8 min hands-on) — a guided walk through
    the schema of the fuel-movements database (terminals, lifts, RIN credits),
    then **you** point your agent at the actual rows and name the two oddest
-   things you find. You aren't expected to explain them — just to notice them.
+   things you find. The drill is **6 minutes of work + 2 minutes to harvest what
+   the room noticed**, so the first keyboard activity starts by minute 16. You
+   aren't expected to explain the oddities — just to notice them.
 3. **First pass, no agent** (~12 min) — read the opaque query yourself, then we
    compare what made it hard. (You appreciate the agent more for trying first.)
 4. **What the query does** (~12 min) — bring in the agent for the literal read:
@@ -74,11 +77,16 @@ do, not what it does now.)
    scan, and fixing it with an index.
 7. **Don't trust the comments** (~10 min) — catch lying comments in a small
    script by checking each claim against the data.
-8. **Working safely with real data** (~8 min) — scoping access; keeping
-   connection strings and PII out of the agent; and a short hands-on where you
-   have the agent create and use a secret it never actually sees.
-9. **Wrap and Homework #2** (~10 min) — build an "intent dossier" for a legacy
+8. **Working safely with real data** (~11 min) — scoping access; keeping
+   connection strings and PII out of the agent; and an 8-minute hands-on where
+   you use a secret three ways without putting its value in the conversation:
+   through a file-reading helper, an environment variable, and command
+   substitution into a required argument.
+9. **Wrap and Homework #2** (~8 min) — build an "intent dossier" for a legacy
    script: what it truly computes, and which comments are lying.
+
+That core plan uses **115 minutes**, leaving a **5-minute buffer** for transitions,
+setup friction, or extra discussion without squeezing the hands-on work.
 
 The hands-on **Exercise 1** runs from your first solo pass (beat 3) through the
 comment hunt (beat 7): you decode an opaque query over the dataset — **data first,
@@ -101,8 +109,9 @@ the lab.
 
   You should see seven tables. If `sqlite3` isn't installed, the Python path in
   [`../../data/README.md`](../../data/README.md) works with no extra installs.
-- Come having done **Homework #1** (learn a command-line technique from the agent) — we open
-  with a short share-back.
+- Come having done **Homework #1**: finish the small project from Session 2 and
+  learn one command-line technique from the agent. We open with a short
+  share-back on both.
 
 No need to study the data beforehand. Coming to it cold is part of the exercise.
 

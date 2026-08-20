@@ -1,80 +1,123 @@
-# Drill — the secret the agent never sees (5 min)
+# Drill — the shell handles the secret; the model does not (8 min)
 
 Autoforce AI Training · Session 3 · run this when your instructor calls it
 
-You've just heard the principle: **keep credentials out of the conversation.**
-This is five minutes of proving it works, in your own session — because "don't
-paste secrets into the chat" sounds obvious right up until you need the agent to
-*use* one.
+You've heard the principle: **keep credentials out of the conversation.** Now
+prove three common ways to use a secret without pasting or printing its value:
 
-Two scripts, pure Python standard library, no installs.
+1. a helper reads a secret file directly;
+2. the shell stores the value in an environment variable and expands it into an
+   argument;
+3. command substitution sends a secret-producing command's output straight into
+   an argument.
+
+The scripts use only the Python standard library. On Windows, substitute
+`python` or `py` for `python3` if needed.
 
 ---
 
-## Do this
+## Before you start
 
-Work in this directory, with Claude Code in **Manual** mode so you see each
-command before it runs.
+Work in this directory with Claude Code in **Manual** mode so you see every
+command before it runs. Reject any command that reads `.app_secret`, runs
+`secret_source.py` by itself, prints `DEMO_SECRET`, or enables shell tracing.
 
-**1. Have the agent create a secret.**
+> **The boundary:** these patterns keep the value out of the prompt and normal
+> command output. They do not stop an agent with approved shell access from
+> deliberately running `cat`, `printenv`, or the secret-producing command. Your
+> approval boundary still matters.
 
-> *"Run `gen_secret.py` in this directory and tell me what happened."*
+## 1 — A helper reads the file (about 2 min)
 
-Read what came back:
+Ask the agent:
 
-```
+> Run `gen_secret.py` in this directory, then run
+> `use_secret.py --sign 2025-08`. Tell me what each command returned without
+> reading or printing `.app_secret`.
+
+You should see a confirmation, signature, and fingerprint—but no secret:
+
+```text
 wrote .app_secret (43 chars). The value was never printed.
-```
-
-**The agent just generated a real credential and does not know what it is.** The
-value went to a file; only a confirmation came back into the conversation.
-
-**2. Now have it *use* the secret.**
-
-> *"Run `use_secret.py --sign 2025-08` and tell me what it returned."*
-
-You get a signature and a fingerprint — and still no secret:
-
-```
 signed '2025-08' -> 4f2a...
 secret loaded ok (fingerprint 9c1d...). The value was never printed.
 ```
 
-The helper opened the file. The model got a result it can't reverse.
+The helper opened the file. The model received only safe output.
 
-**3. Prove it to yourself.** Ask the agent directly:
+## 2 — Environment variable expanded into an argument (about 2 min)
 
-> *"What is the value of the secret in `.app_secret`?"*
+Some commands insist on `--token VALUE`. Ask the agent to run this as **one shell
+command** so the temporary variable is created, consumed, and unset together:
 
-It doesn't know — it never entered the conversation. (If you want it to know,
-you'd have to `cat` the file, which is exactly the mistake this pattern prevents.)
+```bash
+set +x; export DEMO_SECRET="$(python3 secret_source.py)"; python3 arg_consumer.py --secret "$DEMO_SECRET" --sign 2025-08; unset DEMO_SECRET
+```
+
+The assignment prints nothing. The shell expands `$DEMO_SECRET` only when it
+launches `arg_consumer.py`, which prints a signature and fingerprint—not the
+value. `set +x` makes sure shell tracing cannot echo expanded arguments.
+
+## 3 — Command output substituted directly (about 2 min)
+
+Now skip the named variable and capture the producer's stdout directly:
+
+```bash
+set +x; python3 arg_consumer.py --secret "$(python3 secret_source.py)" --sign 2025-08
+```
+
+This is the shape of a real vault command whose output is fed directly to a
+consumer. **Never run `secret_source.py` by itself in the agent session**: its
+stdout is intentionally the secret, so a direct run would put the value in the
+transcript.
+
+## Compare the three (about 2 min)
+
+Ask the agent, without approving any new command:
+
+> Based only on the output already returned, what was the secret value? Compare
+> how the file helper, environment variable, and command substitution kept it
+> out of the conversation.
+
+The answer should be that it cannot recover the value from the signatures or
+fingerprints. The teaching line is:
+
+> **The shell may handle the value; the model does not need to.**
 
 ---
+
+## Where `jq` fits in real work
+
+Vault and cloud CLIs often return JSON. If `jq` is available, the producer inside
+command substitution commonly looks like:
+
+```bash
+some-vault-command --output json | jq -r '.value'
+```
+
+You would place that pipeline inside `$(...)` rather than run it by itself. This
+drill uses `secret_source.py` so nobody needs `jq`; think of it as the already-
+extracted text output of the vault command.
+
+## Important limitation of argument-based secrets
+
+Even when the model never sees the value, a secret passed as `--secret VALUE`
+can be visible to other local processes through the operating system's process
+list or diagnostic logging. Prefer, in order:
+
+1. a helper or client that reads a protected file, stdin, or file descriptor;
+2. a tool-supported environment variable;
+3. argument expansion only when the command offers no safer interface.
+
+This exercise demonstrates how to avoid **conversation leakage** when an
+argument is unavoidable; it does not make command-line arguments private.
 
 ## Done when
 
-You can point at the seam: **the agent invoked something that used a credential,
-and the credential never entered its context.** That's the whole pattern.
+- All three patterns produced the same fingerprint.
+- The secret itself never appeared in the transcript.
+- You can explain why directly running the producer, `cat`, `printenv`, or shell
+  tracing would break the boundary.
 
----
-
-## Why this is the shape for everything
-
-The same seam works for a database password, an API token, a connection string:
-
-| Instead of | Do this |
-|---|---|
-| Pasting a prod DSN into the chat | Put it in `.env` / a vault; the code reads it, the agent calls the code |
-| Asking the agent to "connect with this password" | Give it a helper (`db.py`) that already knows how to connect |
-| Letting the agent read a credentials file | Let it call something that reads the file |
-
-A credential pasted into a transcript is a credential leaked — transcripts get
-saved, shared, and pasted into tickets. The fix isn't discipline, it's a seam:
-**the agent gets a handle, never the value.**
-
-> You'll see the real version of this in Session 4, where the service reads its
-> database configuration from `.env` and the agent works with the service, not
-> the connection string.
-
-**Clean up when you're done:** `rm .app_secret` (or leave it; it's a throwaway in
-a scratch directory, and it's gitignored).
+**Clean up:** delete `.app_secret` or leave it for the instructor's reset script;
+it is a throwaway file and is gitignored.
