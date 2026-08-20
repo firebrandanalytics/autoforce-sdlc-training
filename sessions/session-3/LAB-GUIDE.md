@@ -66,7 +66,7 @@ them.)
 
 ---
 
-## Warm-up — profile the dataset yourself (8 min)
+## Warm-up — profile the dataset yourself (8 min: 6 work + 2 harvest)
 
 Before the mystery query, get your own hands on the data. Your instructor has
 walked the schema file; now go look at the actual rows. **Don't read
@@ -88,6 +88,9 @@ Then answer these, in the chat or out loud:
    tidy schema — a column whose name tells you nothing, a code you can't explain,
    a value that appears far more or less than you'd expect.
 3. **Look at `code_ref`.** Does it explain every code you just found in `lifts`?
+
+Work for **6 minutes**, then stop for a **2-minute room harvest**: share one oddity
+you noticed. The harvest is part of the eight minutes, not extra time.
 
 ### Done when
 
@@ -225,12 +228,13 @@ SELECT prod_cd, ROUND(AVG(rack_price),2) FROM rack_prices GROUP BY prod_cd ORDER
 structurally and (b) one honest sentence on what the data *can't* settle. You have
 hypotheses, not yet conclusions.
 
-### Optional: fan the three profiles out in parallel (`/subtask`)
+### Optional 2-minute command moment: fan the profiles out (`/subtask`)
 
 Three codes, three profiling jobs, and **none of them depends on the other two** —
 which is the textbook case for delegating. In Session 2 you met subagents as a
 concept; this is the first place in the course where they're actually the right
-tool. Instead of profiling the codes one after another:
+tool. If your instructor offers this command moment, spend no more than two
+minutes trying it; otherwise profile the codes one after another:
 
 ```
 /subtask Profile status=8 in data/autoforce.sqlite using ONLY the fact tables
@@ -325,7 +329,7 @@ flagged unknown), `prod` a data-proven behavioral finding plus a to-confirm labe
 
 ---
 
-## Step 3 — Read the machine: the query plan (15 min)
+## Step 3 — Read the machine: the query plan (16 min)
 
 The query "is slow at month-end." Let's see why — and fix it. Keep **D2** open.
 
@@ -350,6 +354,9 @@ reads **every one of the ~50,000 rows** and checks the
 date on each — even though only one month qualifies. There is no index on
 `lifts`; that's deliberate, and that's the lesson. (`SCAN` = read everything;
 `SEARCH` = jump to the rows you need. See D2.)
+
+**Visible checkpoint — about minute 6:** you have run the original plan and can
+point to `SCAN lifts` as the problem.
 
 **Now the catch — the date filter as written can't use an index.** The query
 wraps the column in a function: `substr(lift_ts, 1, 7) = '2025-08'`. A function
@@ -396,6 +403,10 @@ USE TEMP B-TREE FOR ORDER BY
 instead of reading the whole table. (Both temp B-trees — GROUP BY and ORDER BY —
 stay; they're the aggregation and the sort, expected. Only the first line
 changed.)
+
+**Visible checkpoint — about minute 12:** the rewritten predicate plus index has
+flipped the plan to `SEARCH ... USING INDEX`. Use the remaining four minutes to
+prove the results are unchanged and discuss which filters are selective.
 
 **Two things to verify, like a reviewer:**
 
@@ -459,20 +470,23 @@ real legacy script — `vol_report.py` — that ships with the homework brief.)
 
 ---
 
-## Step 5 — The secret the agent never sees (5 min)
+## Step 5 — The shell handles the secret; the model does not (8 min)
 
 Today's data lives in a read-only file on your laptop — the safest sandbox there
-is. On your real systems it won't, and the agent will need credentials it must
-never *see*. Five minutes to prove that seam works.
+is. On your real systems it won't, and the agent will need credentials that do
+not belong in its conversation. Eight minutes to prove three useful seams.
 
-**Go to [`secrets-drill/`](secrets-drill/README.md) and run it.** Two scripts:
-one generates a real secret into a file, one uses it to sign a value. Neither
-ever prints the secret, so it never enters the agent's context — and you'll
-confirm that by asking the agent what the secret is and watching it not know.
+**Go to [`secrets-drill/`](secrets-drill/README.md) and run it.** First a helper
+reads the secret file directly. Then a command that requires `--secret VALUE`
+receives it through an environment variable and through command substitution.
+The Python producer stands in for a vault CLI, so no one needs `jq`; the notes
+show where `jq -r` normally fits when a real command returns JSON.
 
-**Checkpoint 5:** You can point at the seam — the agent used a credential it
-never saw. That's the pattern for every DSN, token, and password you'll hand an
-agent from here on.
+**Checkpoint 5:** All three runs produce the same fingerprint, but the secret
+never appears in the transcript. You can also explain the limit: an approved
+`cat`, `printenv`, direct producer run, or shell trace would expose it, and a
+command-line argument may still be visible in the local process list. Prefer a
+file, stdin, or tool-supported environment variable when the client allows it.
 
 ---
 
