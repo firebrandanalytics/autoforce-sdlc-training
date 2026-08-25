@@ -236,7 +236,80 @@ THE SPEC:
 **Edit pass:** delete any criterion you couldn't check mechanically. *"Works
 correctly"* is not a criterion; *"DAL 2025-08 physical = 1,517,103"* is.
 
+### Stretch — interview your way to a standard ticket skill (~7 min, optional)
+
+> **Only take this if you are ahead.** It is not part of the Step-3 checkpoint;
+> stop when the timebox ends and continue with the board. In a real organization,
+> this would normally be a centrally managed, shared skill. We are creating a
+> project-local example so you can learn the pattern.
+
+A recurring ticket format is exactly the kind of organizational standard a
+skill should carry. Instead of giving the agent your answers up front, have it
+**interview you** to discover the standard. One question at a time makes you
+decide what belongs in every ticket and what changes at each level of the work
+hierarchy.
+
+The finished skill should have this shape:
+
+```text
+.claude/skills/create-ticket/
+├── SKILL.md
+└── modes/
+    ├── epic.md
+    ├── feature.md
+    └── story.md
+```
+
+Paste this into Claude Code:
+
+```text
+Interview me to design a reusable create-ticket skill that standardizes how our
+organization writes Epics, Features, and User Stories. Do not create any files
+yet.
+
+Ask one question at a time, no more than five questions total. Discover:
+- the sections and quality bar every ticket shares
+- what belongs only in an Epic, Feature, or Story
+- how parent/child relationships should be represented
+- how outcomes, acceptance or exit criteria, evidence, dependencies, and
+  out-of-scope items should be written
+- what the skill should do when required information is missing
+
+After the interview, summarize the proposed standard and ask me to approve or
+correct it. Only after I approve it, create:
+
+.claude/skills/create-ticket/SKILL.md
+.claude/skills/create-ticket/modes/epic.md
+.claude/skills/create-ticket/modes/feature.md
+.claude/skills/create-ticket/modes/story.md
+
+SKILL.md must have valid YAML frontmatter with a clear name and a description
+that tells Claude to use this skill whenever someone asks it to draft, create,
+format, review, or decompose backlog tickets. Its body should contain the common
+workflow and route Claude to the appropriate mode file. Each mode file should
+define that level's required structure, questions, quality checks, and one short
+example. The skill must ask for missing facts rather than inventing them. When a
+real tracker action is requested, it should show the completed draft before
+creating anything.
+```
+
+**Test natural-language discovery** with work you already understand:
+
+```text
+Use the create-ticket skill to draft a Feature for delivering trusted monthly
+volumes, then draft one child Story for the volumes service we specified today.
+```
+
+Read the result. Did both tickets use the same organizational standard? Did the
+Feature describe a capability and the Story a checkable slice? Is the hierarchy
+clear? Did the agent ask instead of inventing a missing business decision? If
+not, improve the skill—not just this one output.
+
 **Then put them on the board** — the agent drives:
+
+If you completed the stretch, begin the next request with: *"Use the
+create-ticket skill to format these as standard User Stories, then…"* Everyone
+else uses the prompt exactly as written below.
 
 ```
 For each story in stories.md, create an Azure DevOps work item:
