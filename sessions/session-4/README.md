@@ -60,18 +60,22 @@ You'll also use, from elsewhere in the repo:
    session.
 4. **Put user stories on the real board.** The agent drafts them with checkable
    acceptance criteria, then creates them as **Azure DevOps work items**.
-5. **Plan in plan mode — tests first, logging required — read the plan, approve,
+5. **Delegate an independent coverage audit with `/goal`.** A second Claude
+   session creates its own Git worktree, audits the spec, stories, and skill
+   without editing them, and keeps working while you direct the primary session.
+6. **Plan in plan mode — tests first, logging required — read the plan, check
+   the reviewer, approve,
    and let it run.** The agent writes failing tests, builds the service, and
    iterates to green at its own (fast) speed; your job is the reading and the
    approvals.
-6. **Validate with evidence:** the green suite, the legacy reconcile, and the
+7. **Validate with evidence:** the green suite, the legacy reconcile, and the
    service's own **run log cross-checked against the database**.
-7. **Absorb a change request, safely.** The desk asks for a new field
+8. **Absorb a change request, safely.** The desk asks for a new field
    mid-session: comment the ticket, change the contract tests-first, and **prove
    the existing numbers didn't move by diffing the before/after run logs**.
-8. **Document while it's true** — the agent writes `ARCHITECTURE.md` from the
+9. **Document while it's true** — the agent writes `ARCHITECTURE.md` from the
    real code; you read it like Monday's new teammate.
-9. **Ship it:** a DevOps repo, a branch, agent-written commit messages that say
+10. **Ship it:** a DevOps repo, a branch, agent-written commit messages that say
    *why*, and a PR description with the evidence — Session 5 reviews, merges,
    and closes the tickets.
 
@@ -84,6 +88,8 @@ You'll also use, from elsewhere in the repo:
 - A **skill** (`.claude/skills/autoforce-volume-rules/`) any agent loads — your
   HW2 dossier, made operational.
 - **`stories.md`** — the work, sliced into checkable pieces.
+- A practiced pattern for **parallel, bounded work**: give a read-only reviewer
+  a `/goal` in an isolated Git worktree, keep directing, then check its evidence.
 - A **green test suite and a running `service.py`** that returns reconciled
   physical and taxable volume — built tests-first.
 - A **commit and a PR description** ready for Session 5's review-merge-close.

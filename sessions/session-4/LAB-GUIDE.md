@@ -49,6 +49,10 @@ You'll **start Claude Code inside your repo**. It can still *read* the course
 repo next door (approve the read when it asks — that's our data); it *writes*
 only in yours.
 
+Keep the [`Claude Code Commands — Muscle-Memory Card`](../../handouts/CC-claude-code-commands-card.md)
+open beside the lab. We will call out the commands when they matter; use the
+card whenever you need the shortcut or permission-mode reminder.
+
 ### Set up (the az pieces were the pre-session email)
 
 ```bash
@@ -200,9 +204,12 @@ body-only facts a generic answer can't fake.
 
 ---
 
-## Step 3 — Stories on the board · foundation on main · your branch (~10 min)
+## Step 3 — Stories on the board · foundation on main · your branch · delegate a review goal (~12 min)
 
-> ⏱ **Checkpoint: board + foundation commit + branch by ~minute 35.** If `az` is fighting you, give it **two minutes**, then take the fallback (stories.md + a local `git init`) and keep moving. Nobody spends this block on auth.
+> ⏱ **Checkpoint: board + foundation commit + branch + review goal launched by
+> ~minute 37.** If `az` is fighting you, give it **two minutes**, then take the
+> fallback (stories.md + a local `git init`) and keep moving. Nobody spends this
+> block on auth.
 
 A spec says what *right* means; **stories** slice it into shippable, checkable
 work — and today they go on the **real Azure DevOps board**, because that's
@@ -255,7 +262,8 @@ Lay the project foundation on main, then cut the story branch:
    "working with Azure DevOps from the CLI" section — install the extension
    (az extension add --name azure-devops), az login, az devops configure
    --defaults — so a teammate can clone and work the board.
-2. Write a .gitignore: venv/, __pycache__/, logs/, .env, *.sqlite.
+2. Write a .gitignore: venv/, __pycache__/, logs/, .env, *.sqlite, and
+   .claude/worktrees/.
 3. Commit everything so far on main — README, .gitignore, SPEC.md, stories.md,
    and the .claude/skills folder — with a sensible message, and push main.
 4. Create and switch to branch story/<my-service-story-ID>-volume-service and
@@ -273,9 +281,54 @@ Lay the project foundation on main, then cut the story branch:
 > `git switch -c story/volume-service` gives you the same branch locally — the
 > remote arrives in Session 5. Nothing else changes. Keep moving.
 
+### Delegate a review goal — then leave it working (~2 min)
+
+The build is about to occupy your primary session. Give an **independent second
+session** a bounded review job now, then come back to it during the Step-4 review
+beat. This is the real `/goal` habit: hand off a finish line, keep directing work
+somewhere else, and check the evidence later.
+
+Open a **second terminal** at the root of your volume-service repo and start
+Claude Code normally:
+
+```bash
+claude
+```
+
+If you want the interface to enforce the read-only instruction below, optionally
+use `Shift+Tab` to enter **Plan mode** before pasting the goal. It is not required.
+
+```text
+/goal First, create and enter an isolated git worktree for this audit, based on
+the repository's committed foundation. Use Claude Code's worktree capability.
+If worktree isolation cannot be created, stop and explain why rather than
+continuing in the shared checkout.
+
+Then produce a complete bidirectional coverage audit of SPEC.md, stories.md,
+and .claude/skills/autoforce-volume-rules/SKILL.md.
+
+Every business rule, exclusion, output-contract field, invariant, and
+reconciliation anchor must map to at least one mechanically checkable acceptance
+criterion, and every acceptance criterion must trace back to a documented rule.
+
+Cite the source file and section for each mapping. List every omission,
+contradiction, or criterion that cannot actually be checked.
+
+This is a read-only audit: do not create, edit, or delete any project files; do
+not commit or push. Finish by reporting the worktree path and branch and showing
+that git status --short is empty. Stop after 6 turns if the audit cannot be
+completed.
+```
+
+Once it starts, **leave that terminal alone**. A Claude-managed worktree is a
+real Git worktree: a separate directory and branch sharing this repository's
+history and remote. The isolation keeps the review session away from the story
+branch where your primary session will build. You will check back before you
+approve the plan.
+
 ---
 
-## Step 4 — Plan it, read the plan, approve — and let it run (~15 min, green included)
+## Step 4 — Plan it, check the reviewer, approve — and let it run (~18 min, green included)
 
 > ⏱ **Checkpoint: plan approved and flowing by ~minute 45 · green by ~55.** This is the block's anchor — if you're behind, say so rather than falling quietly behind.
 
@@ -325,13 +378,29 @@ autoforce-volume-rules skill. The plan must include:
   `net_gal` named, with the why? Month a **range**?
 - The **log design** there — one file per run, diffable lines?
 
+### Check back on the delegated goal (~4 min)
+
+Switch to the **second terminal**. Run `/goal` with no arguments to see its
+condition, turns, token spend, and latest evaluator reason.
+
+- **Achieved:** read the audit. Use one finding to challenge the primary
+  session's plan. Does every contract rule have a mechanically checkable gate?
+- **Still active:** read the latest reason, then leave it running if it is making
+  useful progress. Do not babysit it.
+- **Blocked or impossible:** read why. Was the repository state wrong, or was the
+  finish line underspecified? That diagnosis is part of the exercise.
+
+The audit is evidence, not authority. You still decide whether its finding is
+right. Return to the primary terminal and revise the plan if the independent
+review exposed a real gap.
+
 **Then approve — and let it go.** When the plan completes, Claude Code asks
 whether to proceed: **say yes and watch.** It will write the failing tests, then
 the service, run pytest, and iterate to green, asking for approval as it goes.
 This is the loop running at its natural speed — your job is the approvals
-(**Ctrl+E** anything you're unsure of) and watching for one thing: if it starts
-writing `service.py` *before* the failing test run exists, stop it and point at
-the plan.
+(use `Tab` to add a constraint to a permission answer when needed) and watching
+for one thing: if it starts writing `service.py` *before* the failing test run
+exists, stop it and point at the plan.
 
 > **If it stalls** (stops after the tests, or asks what to do next), paste this
 > and it keeps moving:
@@ -339,39 +408,7 @@ the plan.
 > then implement service.py, run pytest, and iterate until green. Ask me only
 > for permissions, or if the evidence contradicts the spec."*
 
-### Set the finish line instead: `/goal` (2 min)
-
-You just pasted a nudge because the agent stopped and asked what to do next.
-There's a cleaner way to say the same thing once, up front:
-
-```
-/goal keep working until python -m pytest is green
-```
-
-`/goal` sets a **condition**, not a next step — the session keeps working across
-turns until the condition is true, instead of checking in each time it finishes a
-piece. It's the difference between "do this, then ask me" and "here's what done
-looks like, tell me when you're there."
-
-**And here is the entire point of using it in this exact spot.** You are about to
-let an agent run unsupervised toward a finish line — which is *only* as
-trustworthy as the finish line itself:
-
-> A goal of *"until tests pass"*, against tests you never read, is the automation
-> of a mistake. It will get there. It will be wrong. And it will be wrong faster
-> and more confidently than if you'd done it by hand.
-
-That's why the plan put **tests first** and why you cross-checked the anchor
-numbers against the legacy script's printed output. **You read the gate before
-you automated toward it.** Every unattended-agent feature in Claude Code — goals,
-loops, scheduled runs — rests on that one habit, and you just practised it in the
-only order that works.
-
-> **Don't want to use it?** Fine — the paste-the-nudge path works identically and
-> you'll finish at the same place. Try `/goal` on the next red-to-green cycle
-> instead; Step 6's change request is a good one.
-
-**When it lands on green: read the tests** (5 quiet minutes). They are your spec,
+**When it lands on green: read the tests** (3 quiet minutes). They are your spec,
 executable — the contract fields, the invariants, the anchors. If a test asserts
 something your spec didn't say, one of them is wrong. Fix that now.
 
@@ -553,8 +590,8 @@ Ship today's work on our story branch:
 
 > **Why "show me the message first":** told simply to commit, the agent writes a
 > perfectly reasonable message and runs the commit in one stroke — the message
-> flashes by *inside* the approval prompt, where you'd need `Ctrl+E` to even see
-> it. Asking for the draft first makes the review explicit. Read it the way the
+> flashes by *inside* the approval prompt, where it is easy to skim past. Asking
+> for the draft first makes the review explicit. Read it the way the
 > reviewer six months out will: does it say **why**, or just *what*?
 
 **Stretch (DevOps working + time to spare):** open the real PR now and leave it
@@ -627,16 +664,17 @@ decisions.
 | Elapsed | What's happening |
 |---:|---|
 | 0–15 | Share-back + the walkthrough of Steps 1–4 |
-| **15–55** | **Work block 1 — Steps 1–4** (~40 min): spec from your dossier (~4) → the skill (~6) → stories + board + foundation commit + branch (~10) → plan: read, push back, approve, let it run to green (~15) |
+| **15–55** | **Work block 1 — Steps 1–4** (~40 min): spec (~4) → skill (~6) → stories + board + foundation + branch + launch the independent `/goal` audit (~12) → plan, check the reviewer, approve, build to green, read the tests (~18) |
 | 55–60 | **Break** (5 min) |
 | 60–65 | Walkthrough of Steps 5–8 |
 | **65–105** | **Work block 2 — Steps 5–8** (~10 min each): validate (tests + log ↔ DB) → the change request (ticket comment, log-vs-log diff) → ARCHITECTURE.md read → ship (approved commit, push, PR.md) |
 | 105–115 | The conversation (how did that actually feel?) |
 | 115–120 | Homework 3 |
 
-**Pace markers, block 1:** spec + skill done by ~25 · board + foundation + branch by
-~35 · plan approved and flowing by ~45 · green by ~55. **Block 2:** validated by
-~75 · change landed by ~85 · docs read by ~95 · shipped by ~105.
+**Pace markers, block 1:** spec + skill done by ~25 · board + foundation + branch
++ review goal launched by ~37 · audit checked and plan approved by ~45 · green +
+tests read by ~55. **Block 2:** validated by ~75 · change landed by ~85 · docs
+read by ~95 · shipped by ~105.
 
 **If you fall behind:** the slice that matters is *green, validated, committed*.
 The change beat and docs can compress; anything unfinished is Session 5's warm-up
