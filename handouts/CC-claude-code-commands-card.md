@@ -6,7 +6,8 @@ These are the commands, shortcuts, and features you'll reach for every day. Not
 exhaustive — just the ones worth memorising. A few keyboard shortcuts differ on
 Windows; those are noted inline.
 
-> **Surfaces move fast.** This card was checked against Claude Code **2.1.232**.
+> **Surfaces move fast.** This card was checked against the Claude Code docs on
+> **August 25, 2026**.
 > Run **`/help`** in *your* installed version before leaning on anything here —
 > and if a command below isn't in your `/help` list, you're on an older build.
 
@@ -82,7 +83,8 @@ the session forgets the detour instead of arguing with it.
 > mistakes cheap — which means you can safely operate in a faster mode than you
 > otherwise would. It's not a recovery tool; it's a *permission* tool. Note
 > what it does **not** cover: anything already pushed, deployed, or run against
-> a real system. Those still deserve Manual mode and `Ctrl+E`.
+> a real system. Those still deserve Manual mode and a careful read of the
+> permission prompt.
 
 ---
 
@@ -95,7 +97,7 @@ around it.
 
 | Command | What it does | Don't confuse it with |
 |---------|-------------|----------------------|
-| ▶ `/goal <condition>` | Sets the **finish line**, not the steps. Claude keeps working across turns until the condition is true. *"keep working until pytest is green."* | `/loop` — a goal runs on a **condition**; a loop runs on a **timer** |
+| ▶ `/goal <condition>` | Sets a **measurable finish line**, constraints, and a turn/time bound. Claude keeps working across turns until the condition is true. *"Audit these three files without editing; stop after 6 turns."* | `/loop` — a goal runs on a **condition**; a loop runs on a **timer** |
 | `/loop [interval] <prompt>` | Re-runs a prompt on an interval while the session stays open. *"check if the deploy finished."* | `cron` — a loop dies when you close the session |
 | `/schedule` | Recurring or one-off runs on Anthropic's cloud, so they survive you closing the laptop. *Research preview.* | `/loop` — this one outlives the session |
 | `/batch <instruction>` | One prompt, **many files, in parallel**. *"rename this symbol across 40 files."* | `/goal` — batch is about breadth, not persistence |
@@ -116,8 +118,8 @@ These work *inside* a Claude Code session — no slash, just the keys.
 
 | Keys | What it does |
 |------|-------------|
-| `Ctrl+C` | Interrupt — stop Claude while it is working |
-| `Esc` | Cancel / clear the prompt you are typing |
+| `Ctrl+C` | Cancel the current input or generation; press twice to exit |
+| `Esc` | Interrupt Claude while it is working; press twice or use `/rewind` to jump to an earlier checkpoint |
 | `Ctrl+D` | Exit Claude Code |
 | `↑` / `↓` | Scroll back through your previous prompts |
 | `Ctrl+R` | Search your prompt history |
@@ -146,11 +148,14 @@ These work *inside* a Claude Code session — no slash, just the keys.
 Two things to know here: which *mode* you are in, and what you press when
 Claude *asks*.
 
-**Cycle the approval mode** — press `Shift+Tab` to rotate through three modes:
+**Cycle the approval mode** — press `Shift+Tab` to rotate through the modes
+available in your build. Watch the mode indicator in the input box; some current
+builds start in Auto mode.
 
-1. **Manual** — Claude asks before every action (the default)
-2. **Auto-accept edits** ("Auto Mode") — file edits apply automatically; shell commands still ask
-3. **Plan mode** — Claude only plans; it writes nothing until you approve the plan
+1. **Manual** — Claude asks before actions that need permission
+2. **Accept edits** — file edits apply automatically; other actions can still ask
+3. **Plan mode** — Claude analyzes and plans without modifying the project
+4. **Auto mode** — Claude handles routine permissions automatically within its safety boundaries
 
 The current mode is shown in the input box as you work.
 
@@ -158,14 +163,15 @@ The current mode is shown in the input box as you work.
 
 | Keys | What it does |
 |------|-------------|
-| `Y` or `Enter` | Approve this action |
-| `N` or `Esc` | Decline it |
-| ▶ `Ctrl+E` | **Toggle the explanation** — show exactly what the action will do before you decide |
+| `↑` / `↓` | Move through the available choices |
+| `Enter` | Select the highlighted choice |
+| `Esc` | Decline or dismiss the prompt |
+| `Tab` | Add a comment or constraint before Claude proceeds |
 
-> **`Ctrl+E` is the one to build muscle memory for.** On anything you are not
-> sure about — an unfamiliar command, a multi-file edit — press `Ctrl+E` first,
-> read what it actually does, *then* approve or decline. You can also ask Claude
-> in plain English before approving (see Useful One-Liners below).
+> On anything you are not sure about — an unfamiliar command or a multi-file
+> edit — read the proposed action and use `Tab` to add a constraint before you
+> approve it. You can also ask Claude in plain English before approving (see
+> Useful One-Liners below).
 
 > **Quick discipline:** start a new codebase in Manual mode. Move to
 > Auto-accept once you have seen a few actions and trust the direction. Knowing
@@ -225,8 +231,8 @@ Read the diff in [file] and tell me if anything looks wrong before I commit.
 # Anchoring scope
 Only modify db.py and tests/test_db.py. Do not touch main.py or service.py yet.
 
-# Setting a finish line instead of a next step
-/goal keep working until python -m pytest is green
+# Setting a bounded, read-only finish line instead of a next step
+/goal Audit SPEC.md against stories.md without editing files. Cite every gap and stop after 6 turns.
 ```
 
 ---
@@ -235,7 +241,7 @@ Only modify db.py and tests/test_db.py. Do not touch main.py or service.py yet.
 
 - **Claude Code inherits your shell's environment.** Variables you export in your shell (or load from `.env`) are available to the commands the agent runs.
 - **`!` runs a command in YOUR shell** and shares the output back into Claude's context. The escape hatch for a quick check or an interactive login. It is **not trimmed** — pipe it (`! cmd | head`) so you don't dump a log, or a secret, into context.
-- **Conversation history is not saved between separate `claude` invocations** (unless you use `--continue`). If you close the terminal, the context is gone.
+- **Conversation history is saved locally and can be resumed.** Use `claude --continue` for the most recent session or `claude --resume` to choose one.
 - **The agent sees your working directory.** It reads files relative to where you started `claude`. Start from the repo root.
-- **Long outputs get truncated in display** but the agent received the full content. Press `Ctrl+O` to expand the transcript, or ask the agent to write the full output to a file.
+- **Long outputs can be truncated.** Press `Ctrl+O` to inspect the transcript, narrow the command, or ask the agent to write full output to a file.
 - **The status line is yours to configure.** Run `/statusline` and describe what you want on it — model, branch, context percentage — and Claude Code writes the script and the setting for you.
