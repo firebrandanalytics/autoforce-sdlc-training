@@ -1,15 +1,18 @@
-# Lab Guide: Close Your Loop — Session 5
+# Lab Guide: Extend the Dashboard — Session 5
 
 Autoforce AI Software-Development Training · Session 5 (hour 1; the second hour
-is a separate presentation)
+is the separate Art of the Possible session)
 
-Session 4 ran the loop; today **everyone finishes their own**. The room is at
-different steps — that's expected, and this guide is built for it: find your rung
-on the ladder below and climb from wherever you are. Steps 1–8 still live in the
-**Session 4 lab guide** (`../session-4/LAB-GUIDE.md`); this guide adds the two
-that close the loop — **Step 9, the clean-context review and merge**, and
-**Step 10, closing the tickets** — which you'll watch demonstrated before the
-work block.
+Today assumes the homework did its job: your Session 4 service is validated and
+your Homework 3 dashboard skeleton renders one table. **We are moving forward
+together.** If either artifact is unfinished, that is useful work to continue
+after class; use the committed starter for today's lab so you can still practice
+the new move.
+
+The instructor will demonstrate the final SDLC close—fresh review, merge, and
+delivered tickets Closed. Your keyboard time then extends the dashboard against
+the service contract: a month picker, a simple chart, and a JSON API, followed
+by an end-to-end reconciliation.
 
 ---
 
@@ -17,178 +20,190 @@ work block.
 
 | Elapsed | What's happening |
 |---:|---|
-| 0–10 | Share-back: finishing the steps solo — what held, what fought you |
-| 10–15 | **Demo: the loop closes** (Steps 9–10, live on the instructor repo) + where it was all headed |
-| **15–45** | **Work block (30 min)** — the ladder below; continue from wherever you are |
-| 45–60 | The series, tied together — then the handoff |
+| 0–5 | Homework receipts: what worked, what you challenged, what a gate caught |
+| 5–10 | **Demo:** fresh review → merge → delivered tickets Closed |
+| **10–15** | **Your keyboard:** launch the dashboard skeleton |
+| **15–20** | **Your keyboard:** confirm the app/service contract |
+| **20–35** | **Your keyboard:** two subagents extend independent surfaces |
+| **35–45** | **Your keyboard:** integrate and inspect the rendered app |
+| **45–50** | **Your keyboard:** reconcile and run the tests |
+| 50–58 | The five-session loop, tied together + stretch paths |
+| 58–60 | Handoff to the separate Art of the Possible session |
+
+If the clock reaches the next checkpoint before your agent does, leave the work
+in a coherent state, write the next action down, and keep going after the
+session. The clock protects the lesson; it does not define when your project is
+finished.
 
 ---
 
-## Before you climb (everyone, ~3 min)
+## Step 0 — Launch the skeleton (~5 min)
+
+Work where Homework 3 left you:
 
 ```bash
-# 1) Fresh course materials (run inside the course repo):
-cd autoforce-sdlc-training && git pull --ff-only origin main
+cd autoforce-sdlc-training
+git pull --ff-only origin main
+cd sessions/session-5
+export DB_PATH=../../data/autoforce.sqlite
+```
 
-# 2) Back to YOUR repo — the sibling you created in Session 4:
-cd ../<initials>-volume-service
+If your Homework 3 dashboard is here, keep it. If it is not running, take the
+safety net rather than spending the lab rebuilding setup:
 
-# 3) Start Claude Code here:
+```bash
+cp -r starter/* .
+python3 -m pip install -r requirements.txt
+```
+
+Start the server in one terminal:
+
+```bash
+uvicorn app:app --reload
+```
+
+Open `http://localhost:8000`. You should see the latest month's table. In a
+second terminal, start Claude Code in this same folder:
+
+```bash
 claude
 ```
 
-Then paste the **re-entry prompt** — a fresh session has no memory of Thursday,
-so make it rebuild the picture from the artifacts (this is the same move as
-Step 9's review, in miniature):
-
-```
-Read whatever exists of: SPEC.md, stories.md, PLAN.md, test_service.py,
-service.py, ARCHITECTURE.md, PR.md — plus git log --oneline and git status.
-Against this checklist — (1) spec, (2) skill, (3) stories on the board +
-foundation commit + story branch, (4) tests-first build to green, (5) validation
-evidence (pytest + reconcile + run log ↔ database), (6) the lift_count change
-absorbed with a before/after log diff, (7) ARCHITECTURE.md, (8) approved commit,
-push, PR — tell me exactly what's DONE, what's HALF-DONE, and the single next
-action. Don't do anything yet.
-```
-
-Read its answer, check it against what you remember, and start there.
+**Checkpoint 0:** page visible; no stack trace; the table has real terminals and
+volumes. If not, use the starter now and diagnose your original afterward.
 
 ---
 
-## The ladder — find your rung
+## Step 1 — Pin the contract (~5 min)
 
-| Where you actually are | Start here |
-|---|---|
-| Mid-Steps 1–8 (most of the room) | Resume at your step in `../session-4/LAB-GUIDE.md`. **Today's target: through Step 5, the done-gate** — a validated service beats a rushed PR. |
-| Steps 1–8 done; PR open (or PR.md ready) | **Step 9 below** — the clean-context review, then the merge. |
-| Merged | **Step 10 below** — close the tickets. ~5 minutes, very satisfying. |
-| Loop closed | **Homework 3** (`../../homework/homework-3-brief.md`) — the dashboard skeleton on your service. |
-| Dashboard running too | **`EXTRA-CREDIT.md`** (this folder) — extend it with parallel subagents — and handout **C11** for the power tools. |
+The service and app can evolve independently only if they agree on the seam.
+Paste this prompt:
 
-Never started, or Session 4 went sideways? The Environment section of the
-Session 4 guide gets you a repo in ~5 minutes — wave the instructor over and
-start at Step 1. (No Homework 2 dossier to paste? Ask — we'll hand you one.)
+```text
+Read service.py and app.py. Before changing code, write CONTRACT.md: the exact
+row shape the service returns and the app consumes. Include the five fields and
+types (terminal, month, physical_gal, taxable_gal, lift_count), the meaning of
+each measure, the invariants, and the functions that produce the rows
+(monthly_volumes and months). Confirm that app.py reads through the service and
+never queries SQLite. Keep it readable in 30 seconds. Do not write code yet.
+```
+
+Read the result. It must pin:
+
+- `physical_gal >= taxable_gal >= 0`;
+- `lift_count >= 1`;
+- one row per `(terminal, month)`;
+- `terminal` resolves to a real terminal;
+- the app calls `service.monthly_volumes()` and `service.months()`—no SQL in the
+  app or templates.
+
+**Checkpoint 1:** `CONTRACT.md` is specific enough that two agents can work
+without inventing different field names or business rules.
 
 ---
 
-## Step 9 — The clean-context review, then the merge (~10 min)
+## Step 2 — Split the build (~15 min)
 
-You wrote this code (well — you directed it). You've been staring at it since
-Thursday. You are exactly the wrong person to review it, and so is the session
-that built it: it *wants* to have been right. The fix is the same one a real team
-uses — **fresh eyes**. Open a **new terminal**, and start a **brand-new Claude
-Code session** in your repo (a new `claude` — not the session that did the work;
-context is the whole point):
+Now delegate independent surfaces against that contract. Paste:
 
-```
-You have no prior context on this work — that's deliberate. You are the
-REVIEWER, not the author. Review the story branch as a senior engineer would:
+```text
+Use two subagents to extend this dashboard in parallel. Both must read and honor
+CONTRACT.md. Neither may query SQLite directly.
 
-1. Read SPEC.md and the acceptance criteria in stories.md — that's the standard.
-2. Read the actual diff: git diff main...HEAD.
-3. Interrogate the tests: do they encode the contract fields, the invariants,
-   and the exact reconciliation anchors? Could they pass while the spec is
-   violated?
-4. Don't take the PR description's word for anything: run pytest yourself, and
-   re-run the reconcile against ../autoforce-sdlc-training/data/vol_report.py.
-5. Verdict: APPROVE or REQUEST CHANGES, with at most three findings, each with
-   file:line evidence. Nitpicks last, clearly labeled.
-```
+SUBAGENT A — RENDERED MAIN VIEW
+- Add a month dropdown to GET / using service.months().
+- Default to the latest month; changing it reloads the page with ?month=YYYY-MM.
+- Keep the table and add a simple horizontal CSS bar for physical_gal relative
+  to the largest terminal in the selected month. No JavaScript chart library.
 
-**Read the verdict the way you'd read a colleague's review.** If it found
-something real, fix it in your original session (or this one) and re-run the
-tests. If it only found nitpicks — congratulations, that's what shipping feels
-like.
+SUBAGENT B — API + TESTS
+- Add GET /api/volumes?month=YYYY-MM returning the same service rows as JSON.
+- Add focused FastAPI TestClient tests: GET / and the API return 200; the API's
+  2025-08 DAL row matches 1,517,103 physical and 1,371,642 taxable; every API
+  row honors the contract invariants.
 
-### Optional stretch — make the reviewer reusable: `/agents` (~4 min)
-
-Protect the core loop first: get the verdict, resolve any real finding, merge,
-and close the delivered tickets. If you have four minutes left after that—or
-want a useful follow-up at your desk—turn the reviewer into a shared agent:
-
-You just hand-rolled a reviewer: a fresh context, a rubric, a scope. You'll want
-it again on Monday, and on every PR after that — so don't retype it.
-
-```
-/agents
+Integrate both results. Report which files each subagent changed and any
+conflict you resolved. Stop before starting the server or changing the service.
 ```
 
-Create one called `volume-reviewer`. Two things make it worth keeping rather
-than re-pasting:
+While they work, watch for the useful failures:
 
-- **Its instructions are the prompt you just used** — the five numbered steps,
-  including *"run the tests yourself, don't take the description's word."*
-- **It loads your `autoforce-volume-rules` skill**, so it reviews against *your*
-  decoded business rules — the dyed-diesel asymmetry, `net_gal`, the two
-  exclusions — not generic Python advice.
+- `sqlite3.connect` appears in `app.py`: reject it; the app crossed the seam.
+- One side writes `physical` while the contract says `physical_gal`: point it
+  back to `CONTRACT.md`.
+- Empty rows cause division by zero: use `max(..., default=1)` or equivalent.
+- Both agents edit `app.py`: integration is expected. The contract makes the
+  disagreement small enough to resolve deliberately.
 
-It lands in `.claude/agents/` in your repo, which means it's **committed, shared,
-and reviewable like any other code.** Your teammate's PR gets reviewed against
-the same rules yours was.
-
-> **What you've actually built here is the interesting part.** A subagent is
-> exactly the fresh-context reviewer you just ran by hand — that's all it is. The
-> value isn't automation, it's that **the standard stopped living in your head
-> and became a file the team shares.** A rubric one person remembers is a
-> preference; a rubric in the repo is a standard.
->
-> And the limit is the same one from Session 4's `/goal`: the reviewer is only
-> as good as the rubric you gave it. It will apply your rules faithfully,
-> including the wrong ones.
-
-If you skip the stretch, continue here. **Log the review where the work lives,
-then merge:**
-
-```
-Post the review verdict to my service story's work item:
-az boards work-item update --id <service-story-id> --discussion "<one-paragraph
-verdict + findings>". Then list my open PRs (az repos pr list -o table), and
-complete my PR: az repos pr update --id <PR-id> --status completed. If DevOps
-says the merge is queued or still analyzing, wait a few seconds and run the
-update again.
-```
-
-> **Fallback (no DevOps):** the review above works identically — it's reading
-> your local branch. Merge locally instead: `git switch main && git merge
-> story/<id>-volume-service`, and note the verdict at the top of `stories.md`.
+**Checkpoint 2:** the diff contains the filter, CSS bars, JSON route, and tests;
+the service's business logic is unchanged.
 
 ---
 
-## Step 10 — Close the tickets (~5 min)
+## Step 3 — Integrate and inspect the rendered app (~10 min)
 
-Close **what merged, not what you hope**: the merge delivered your service story
-and (if you built the CLI with it) the reconcile-CLI story. The dashboard
-stories stay open — they're Homework 3 / extra credit.
+Review the diff before running it:
 
-```
-Close the stories the merge delivered:
-az boards work-item update --id <service-story-id> --state Closed
-az boards work-item update --id <cli-story-id> --state Closed
-Then show me the board state: az boards work-item list (or query) — I want to
-see Closed next to the right items and nothing else touched.
+```text
+Show me the integrated diff grouped by contract, main-view behavior, API, and
+tests. Flag any database access outside service.py and any field name that does
+not match CONTRACT.md. Do not fix anything until I approve the review.
 ```
 
-That's the loop: an ask became a spec, a spec became stories, stories became a
-branch, a branch became reviewed, merged code — and the board says so. *(No
-DevOps: mark them closed in `stories.md` with the date. Same loop, smaller
-board.)*
+Then restart or let `uvicorn --reload` refresh. Inspect it as a user:
+
+- Select two different months. The heading, table, and bars should all change.
+- Confirm bar lengths track the physical-volume values without replacing the
+  exact numbers.
+- Open `http://localhost:8000/api/volumes?month=2025-08` and confirm it returns
+  JSON rows with all five contract fields.
+- Check the terminal for template errors and the browser console for errors.
+
+Human eyes are the required check in class. The stretch guide adds two ways to
+let Claude inspect the actual rendered browser too: the Claude in Chrome
+extension and a Playwright browser-testing subagent.
+
+**Checkpoint 3:** the UI works at two months, the API returns rows, and rendered
+behavior—not just source code—has been inspected.
 
 ---
 
-## If the 30 minutes runs out mid-step
+## Step 4 — Reconcile and test (~5 min)
 
-Stop where you are and note your next action at the top of `stories.md` — the
-re-entry prompt above will pick it up whenever you come back. Everything on this
-ladder works exactly the same at your desk tomorrow: nothing here needed the
-classroom except the company.
+A prettier wrong number is still wrong. Run:
+
+```bash
+python3 -m pytest -q
+python3 -c "import service; print(next(r for r in service.monthly_volumes('2025-08') if r['terminal'] == 'DAL'))"
+curl -s "http://localhost:8000/api/volumes?month=2025-08"
+```
+
+For DAL in `2025-08`, both the service and API must show:
+
+- `physical_gal`: **1,517,103**
+- `taxable_gal`: **1,371,642**
+- `lift_count`: **184**
+
+If the UI or API disagrees with the service, fix the consumer. Do not duplicate
+or "correct" the service logic from inside the web layer.
+
+**Done gate:** month filter works; CSS bars render; JSON API works; tests pass;
+DAL reconciles; no database access exists outside `service.py`.
 
 ---
 
-## While the agent works — still true today
+## If you finish early—or continue afterward
 
-`/btw <question>` answers side questions in an overlay without disturbing the
-build. The stall-nudge from Session 4 still applies if a resumed build stops
-mid-flight: *"Continue from the approved plan. Run the failing tests if they
-haven't run, then implement, run pytest, and iterate until green."* And the
-ground rule stands: the course repo is read-only reference — `data/` only.
+Open `EXTRA-CREDIT.md`. The next useful moves are:
+
+1. a terminal-detail page across all months;
+2. Claude in Chrome inspecting the rendered localhost app, console, and user
+   flow;
+3. a reusable Playwright browser-testing subagent;
+4. stronger accessibility, visual, route, and reconciliation tests;
+5. documentation and the same clean-context review → merge → ticket-close loop
+   the instructor demonstrated.
+
+Anything the room does not finish is now a well-scoped continuation, not a
+failed exercise. Keep `CONTRACT.md`, the test output, and your written next
+action; resume from evidence rather than memory.

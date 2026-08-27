@@ -1,14 +1,13 @@
 # Homework #3 — Stand Up the Dashboard Starter
 
-> **Status (updated after Session 4):** the homework that matters is **finishing
-> the Session 4 lab's remaining steps** in your own repo — Session 5 is built
-> around continuing from wherever you are. This dashboard brief is now
-> **optional extra credit**: do it only once your loop is closed (PR merged,
-> tickets closed), and if you want still more after that, it continues in
-> `sessions/session-5/EXTRA-CREDIT.md`. Everything below works as written.
+> **Required preparation for Session 5:** finish the Session 4 core service work
+> and stand up this one-table dashboard skeleton. Session 5 assumes both are
+> ready and moves forward into the web UI extension. If either remains
+> unfinished, keep it as follow-up work and use the committed starter during the
+> live lab so you do not miss the new material.
 
 **Assigned after:** Session 4 (From Vague Ask to a Working Service)
-**Due before:** Session 5 *(now optional — see status note above)*
+**Due before:** Session 5
 **Time budget:** 30–45 minutes (deliberately small)
 
 ---
@@ -19,16 +18,15 @@ In Session 4 you built a **service** — a `service.py` that *returns* clean mon
 volumes by terminal. Now put the smallest possible **web page** on top of it: a
 read-only dashboard with **one view**, a table of volumes by terminal.
 
-That's it. Skeleton plus one table. No month picker, no chart, no detail pages, no
-JSON API — those are the **extra-credit extensions**
-(`sessions/session-5/EXTRA-CREDIT.md`). This brief is intentionally light: the
-goal is a running skeleton, so the extension work starts from something real
-instead of from bootstrapping.
+That's it. Skeleton plus one table. No month picker, chart, detail page, or JSON
+API yet—the first three extensions begin in the **Session 5 lab**. This brief is
+intentionally light: the goal is a running skeleton so class starts from
+something real instead of spending its limited hour bootstrapping.
 
-> **Why so small?** The extra-credit track splits the dashboard's growth across
-> parallel agents working against your service's contract. You get far more out
-> of that if the skeleton already exists. Starting small here is the setup for
-> going wide there.
+> **Why so small?** Session 5 splits the dashboard's growth across parallel
+> agents working against your service's contract. You get far more out of that
+> if the skeleton already exists. Starting small here is the setup for going
+> wide in class.
 
 ---
 
@@ -141,9 +139,9 @@ that answer in Session 5 when two agents extend this in parallel.
 
 ## The Safety Net — You Will Not Be Blocked
 
-A working starter is committed at **`sessions/session-5/starter/`**. If you run out
-of time, get stuck, or your build won't run, you can still do the extra-credit
-extensions:
+A working starter is committed at **`sessions/session-5/starter/`**. If you run
+out of time, get stuck, or your build will not run, use it so you can still do
+the Session 5 extensions:
 
 ```bash
 cd sessions/session-5
@@ -179,8 +177,7 @@ After you finish, jot short answers:
 
 1. **Did it run, and do the numbers match your service?** One sentence.
 2. **The seam:** in your own words, what does keeping SQL out of `app.py` buy you?
-3. **One thing you'd want to add** to the dashboard — a feature to pick first
-   from the extra-credit track.
+3. **One thing you'd want to add** to the dashboard during Session 5.
 4. **One snag** — a moment the agent did something you had to correct, or a setup
    issue you hit (so we can clear it for the room).
 
@@ -194,7 +191,7 @@ report.
 You used Azure DevOps from the agent in Session 4 (work items, the ticket
 comment, the repo push). Session 5 finishes the loop there — the clean-context
 review of your PR, the merge, the tickets closing — so if **any** of that
-errored for you in class, fix it before Tuesday:
+errored for you in class, fix it before Session 5:
 
 ```bash
 az extension add --name azure-devops     # the DevOps plugin for the az CLI (once)
@@ -211,17 +208,17 @@ Session 5. Nothing else in this homework depends on DevOps.
 
 ## What to Bring to Session 5
 
-- Wherever you actually got to — Session 5's lab guide starts from your real
-  state, dashboard or no dashboard.
-- Your reflection bullets, if you did this.
-- `az devops project list` working (or the error message it gave you — see
-  pre-work above).
+- Your validated Session 4 service.
+- This one-table dashboard running—or be ready to take the committed starter in
+  the first five minutes.
+- Your four reflection bullets.
+- `az devops project list` working (or the exact error message from the pre-work
+  above).
 
-Session 5 opens with a share-back on finishing the Session 4 steps solo, then a
-30-minute work block to continue from your own rung — this dashboard included,
-if you're that far. The extensions (month filter, chart, detail page, JSON API)
-live on in `sessions/session-5/EXTRA-CREDIT.md`, split across parallel agents
-against your service's contract.
+Session 5 assumes the homework starting line and extends the dashboard with a
+month filter, CSS chart, JSON API, and tests. Any unfinished homework remains
+worth completing afterward; the starter keeps it from consuming the final
+session's new material.
 
 ---
 
