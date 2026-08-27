@@ -67,8 +67,9 @@ You'll also use:
 
 ## Before the session
 
-- `git pull` in the course repo (this guide and two new documents landed this
-  week).
+- `git pull --ff-only origin main` in the course repo (this guide and two new
+  documents landed this week). If Git reports local changes, stop and preserve
+  them before updating.
 - Know where your Session 4 repo is (`<initials>-volume-service`, the sibling of
   the course clone) and have Claude Code launching.
 - If Azure DevOps fought you in Session 4, bring the exact error — we triage in
