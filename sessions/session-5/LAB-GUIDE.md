@@ -28,7 +28,7 @@ work block.
 
 ```bash
 # 1) Fresh course materials (run inside the course repo):
-cd autoforce-sdlc-training && git pull
+cd autoforce-sdlc-training && git pull --ff-only origin main
 
 # 2) Back to YOUR repo — the sibling you created in Session 4:
 cd ../<initials>-volume-service
@@ -101,7 +101,11 @@ something real, fix it in your original session (or this one) and re-run the
 tests. If it only found nitpicks — congratulations, that's what shipping feels
 like.
 
-### Make the reviewer reusable: `/agents` (~4 min)
+### Optional stretch — make the reviewer reusable: `/agents` (~4 min)
+
+Protect the core loop first: get the verdict, resolve any real finding, merge,
+and close the delivered tickets. If you have four minutes left after that—or
+want a useful follow-up at your desk—turn the reviewer into a shared agent:
 
 You just hand-rolled a reviewer: a fresh context, a rubric, a scope. You'll want
 it again on Monday, and on every PR after that — so don't retype it.
@@ -133,7 +137,8 @@ the same rules yours was.
 > as good as the rubric you gave it. It will apply your rules faithfully,
 > including the wrong ones.
 
-**Log the review where the work lives, then merge:**
+If you skip the stretch, continue here. **Log the review where the work lives,
+then merge:**
 
 ```
 Post the review verdict to my service story's work item:
